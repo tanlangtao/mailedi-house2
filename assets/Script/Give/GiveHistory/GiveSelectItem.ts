@@ -13,34 +13,29 @@ const {ccclass, property} = cc._decorator;
 @ccclass
 export default class NewClass extends cc.Component {
 
-    @property(cc.EditBox)
-    amountInput: cc.EditBox = null;
+    @property(cc.Label)
+    label: cc.Label = null;
 
-    @property()
-    public app = null;
+    @property
+    parentComponent = null;
+    index = 0;
     // LIFE-CYCLE CALLBACKS:
-
-    onLoad () {
-        this.app = cc.find('Canvas').getComponent('Canvas');
-        this.app.getPublicInput(this.amountInput,1);
+    public init(data){
+        this.label.string = data.text;
+        this.parentComponent = data.parentComponent;
+        this.index = data.index;
     }
-    strt(){
+    // onLoad () {}
+
+    start () {
 
     }
+
     onClick(){
-
-        this.node.destroy();
+        this.parentComponent.current = this.index;
+        this.parentComponent.showSelect = false;
+        this.parentComponent.selectContent.removeAllChildren();
+        this.parentComponent.initRender();
     }
-
-    historyClick(){
-        this.app.showSellHistory();
-    }
-
-    deleteAmount(){
-        this.amountInput.string = '';
-    }
-    removeSelf(){
-        this.node.destroy();
-    }
-
+    // update (dt) {}
 }

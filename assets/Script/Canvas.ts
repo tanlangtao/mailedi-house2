@@ -30,6 +30,30 @@ export default class NewClass extends cc.Component {
     @property(cc.Prefab)
     InfoAlert : cc.Prefab = null;
 
+    @property(cc.Prefab)
+    Main : cc.Prefab = null;
+
+    @property(cc.Prefab)
+    Give : cc.Prefab = null;
+
+    @property(cc.Prefab)
+    SetPasswordAlert : cc.Prefab = null;
+
+    @property(cc.Prefab)
+    TestPasswordAlert : cc.Prefab = null;
+
+    @property(cc.Prefab)
+    ChangePasswordAlert : cc.Prefab = null;
+
+    @property(cc.Prefab)
+    ReceiveHistory : cc.Prefab = null;
+
+    @property(cc.Prefab)
+    GiveHistory : cc.Prefab = null;
+
+    @property(cc.Node)
+    content : cc.Node = null;
+
     @property()
     public UrlData : any = [];
     public Client  = null;
@@ -40,7 +64,6 @@ export default class NewClass extends cc.Component {
         this.config = new Config();
         this.UrlData =  this.config.getUrlData();
         this.token = this.config.token;
-        console.log(this.token);
         this.Client = new ClientMessage();
     }
 
@@ -94,4 +117,50 @@ export default class NewClass extends cc.Component {
         var node = cc.instantiate(this.sellHistory);
         this.node.addChild(node);
     }
+
+    public showMain(){
+        var node = cc.instantiate(this.Main);
+        this.content.addChild(node);
+    }
+
+    public showGive(){
+        var node = cc.instantiate(this.Give);
+        this.content.addChild(node);
+    }
+
+    public showSetPasswordAlert(self){
+        var node = cc.instantiate(this.SetPasswordAlert);
+        this.node.addChild(node);
+        node.getComponent('SetPasswordAlert').init({
+            parentComponent:self
+        })
+
+    }
+
+    public showTestPasswordAlert(self,type){
+        var node = cc.instantiate(this.TestPasswordAlert);
+        this.node.addChild(node);
+        node.getComponent('TestPasswordAlert').init({
+            parentComponent:self,
+            type : type
+        })
+    }
+    public showChangePasswordAlert(self){
+        var node = cc.instantiate(this.ChangePasswordAlert);
+        this.node.addChild(node);
+        node.getComponent('ChangePasswordAlert').init({
+            parentComponent:self
+        })
+    }
+
+    public showGiveHistory(){
+        var node = cc.instantiate(this.GiveHistory);
+        this.content.addChild(node);
+    }
+
+    public showReceiveHistory(){
+        var node = cc.instantiate(this.ReceiveHistory);
+        this.content.addChild(node);
+    }
+
 }
