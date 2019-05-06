@@ -28,9 +28,6 @@ export default class NewClass extends cc.Component {
     sellHistory : cc.Prefab = null;
 
     @property(cc.Prefab)
-    InfoAlert : cc.Prefab = null;
-
-    @property(cc.Prefab)
     Main : cc.Prefab = null;
 
     @property(cc.Prefab)
@@ -51,6 +48,18 @@ export default class NewClass extends cc.Component {
     @property(cc.Prefab)
     GiveHistory : cc.Prefab = null;
 
+    @property(cc.Prefab)
+    AccNum : cc.Prefab = null;
+
+    @property(cc.Prefab)
+    AddTypeAlert : cc.Prefab = null;
+
+    @property(cc.Prefab)
+    AlipayAccountAlert : cc.Prefab = null;
+
+    @property(cc.Prefab)
+    BankAccountAlert : cc.Prefab = null;
+
     @property(cc.Node)
     content : cc.Node = null;
 
@@ -63,6 +72,7 @@ export default class NewClass extends cc.Component {
     protected onLoad(): void {
         this.config = new Config();
         this.UrlData =  this.config.getUrlData();
+        this.UrlData.host = 'http://10.63.60.59:8088';
         this.token = this.config.token;
         this.Client = new ClientMessage();
     }
@@ -76,10 +86,6 @@ export default class NewClass extends cc.Component {
         this.node.addChild(node);
     }
 
-    showInforAlert(){
-        let node = cc.instantiate(this.InfoAlert);
-        this.node.addChild(node);
-    }
 
     public getPublicInput(input,type) {
         var PublicInputAlert = cc.instantiate(this.PublicInputAlert);
@@ -99,7 +105,12 @@ export default class NewClass extends cc.Component {
                 //验证input type = 2 不能输入特殊字符
                 var patrn = /[`~!@#$%^&*()_\-+=<>?:"{}|,.\/;'\\[\]·~！@#￥%……&*（）——\-+={}|《》？：“”【】、；‘’，。、]/im;
                 input.string = e.string.replace(patrn,'');
+            }else if(type == 3){
+                //验证input,可以输入两位小数
+                let reg = /^\d{0,8}\.{0,1}(\d{0,2})?$/;
+                input.string = !reg.test(e.string) ? '' :e.string ;
             }
+
             PublicInputAlert.getComponent('PublicInputAlert').init({
                 text: e.string,
                 input: input
@@ -163,4 +174,33 @@ export default class NewClass extends cc.Component {
         this.content.addChild(node);
     }
 
+    public showAccNum(){
+        var node = cc.instantiate(this.AccNum);
+        this.content.addChild(node);
+    }
+
+    public showAddTypeAlert(){
+        var node = cc.instantiate(this.AddTypeAlert);
+        this.node.addChild(node);
+    }
+
+    public showAlipayAccountAlert(data){
+        var node = cc.instantiate(this.AlipayAccountAlert);
+        this.node.addChild(node);
+        node.getComponent('AlipayAccountAlert').init({
+            text:data.text,
+            action:data.action,
+            itemId:data.itemId
+        })
+    }
+
+    public showBankAccountAlert(data){
+        var node = cc.instantiate(this.BankAccountAlert);
+        this.node.addChild(node);
+        node.getComponent('BankAccountAlert').init({
+            text:data.text,
+            action:data.action,
+            itemId:data.itemId
+        })
+    }
 }

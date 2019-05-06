@@ -36,6 +36,7 @@ export default class NewClass extends cc.Component {
     public searchData : any = {};
     public FormData = new FormData();
     public  app = null;
+    public idx = 0;
     // LIFE-CYCLE CALLBACKS:
 
     onLoad () {
@@ -62,6 +63,16 @@ export default class NewClass extends cc.Component {
                 this.init();
             }else{
 
+            }
+        }).catch((error)=>{
+            if(this.idx>=5){
+                this.app.showAlert(' 网络错误，请重试！');
+                let self = this;
+                //3秒后自动返回大厅
+                setTimeout(()=>{self.app.Client.send('__backtohall',{},()=>{})},2000)
+            }else{
+                //重新请求数据
+                this.fetchIndex();
             }
         })
     }
@@ -105,6 +116,11 @@ export default class NewClass extends cc.Component {
                 this.app.showAlert(data.msg)
             }
         })
+    }
+
+    accNumClick(){
+        this.app.showAccNum();
+        this.node.removeFromParent();
     }
 
     passwordClick(){

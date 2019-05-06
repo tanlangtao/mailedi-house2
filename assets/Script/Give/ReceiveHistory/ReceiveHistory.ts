@@ -51,7 +51,7 @@ export default class NewClass extends cc.Component {
 
         this.initRender();
 
-        this.getPublicInput();
+        this.app.getPublicInput(this.IdInput,1);
 
         this.fetchIndex();
     }
@@ -89,7 +89,7 @@ export default class NewClass extends cc.Component {
                 this.init()
 
             } else {
-                this.showAlert(data.msg)
+                this.app.showAlert(data.msg)
             }
             //收到结果后才能点击搜索，上下翻页，避免页面错乱
             this.isReceive = true;
@@ -109,33 +109,6 @@ export default class NewClass extends cc.Component {
     //selectItem回调
     public initRender() {
         this.selectLabel.string = this.data[this.current];
-    }
-
-    public getPublicInput() {
-        var PublicInputAlert = cc.instantiate(this.app.PublicInputAlert);
-        var canvas = cc.find('Canvas');
-        this.IdInput.node.on('editing-did-began', (e) => {
-            canvas.addChild(PublicInputAlert);
-            PublicInputAlert.getComponent('PublicInputAlert').init({
-                text: e.string,
-                input: this.IdInput
-            })
-        })
-        this.IdInput.node.on('text-changed', (e) => {
-            //验证input 不能以0开头的整数
-            this.IdInput.string = e.string.replace(/[^\d]/g, '').replace(/^0{1,}/g, '');
-            PublicInputAlert.getComponent('PublicInputAlert').init({
-                text: e.string,
-                input: this.IdInput
-            })
-        })
-    }
-
-    public showAlert(data) {
-        var node = cc.instantiate(this.app.publicAlert);
-        var canvas = cc.find('Canvas');
-        canvas.addChild(node);
-        node.getComponent('PublicAlert').init(data);
     }
 
     ReceiveClick() {
