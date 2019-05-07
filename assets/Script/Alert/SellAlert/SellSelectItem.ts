@@ -20,7 +20,7 @@ export default class NewClass extends cc.Component {
     selectLabel = null;
     showSelect = null;
     selectContent= null;
-    info = null;
+    data = null;
     parentCom = null;
     // LIFE-CYCLE CALLBACKS:
     public init(data){
@@ -28,7 +28,7 @@ export default class NewClass extends cc.Component {
         this.selectLabel = data.Label;
         this.showSelect = data.showSelect;
         this.selectContent = data.selectContent;
-        this.info = data.info;
+        this.data = data.data;
         this.parentCom = data.parentCom;
     }
     // onLoad () {}
@@ -41,11 +41,17 @@ export default class NewClass extends cc.Component {
         this.showSelect = false;
         this.selectLabel.string = this.label.string;
         this.selectContent.removeAllChildren();
-        console.log(this.info)
-        if(this.info.type == 2){
-            this.parentCom.ZfbInfo = this.info;
-        }else if(this.info.type == 3){
-            this.parentCom.BankInfo = this.info;
+        let info =JSON.parse(this.data.info);
+        let type = this.data.type;
+        info = {
+            ...info,
+            type
+        };
+        //数组的第一项放支付宝信息，第二项放银行卡信息；
+        if(this.data.type == 2){
+            this.parentCom.Info[0] = info;
+        }else if(this.data.type == 3){
+            this.parentCom.Info[1] = info;
         }
 
     }

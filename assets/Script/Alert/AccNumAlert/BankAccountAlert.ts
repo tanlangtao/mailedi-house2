@@ -98,6 +98,9 @@ export default class NewClass extends cc.Component {
             if(data.status == 0){
                 //刷新界面
                 accNum.fetchIndex();
+                // 刷新app数据
+                this.app.fetchIndex();
+
                 this.app.showAlert('操作成功！')
             }else{
                 this.app.showAlert(data.msg)

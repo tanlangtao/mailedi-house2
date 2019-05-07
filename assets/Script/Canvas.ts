@@ -60,32 +60,94 @@ export default class NewClass extends cc.Component {
     @property(cc.Prefab)
     BankAccountAlert : cc.Prefab = null;
 
+    @property(cc.Prefab)
+    DeleteAccountAlert : cc.Prefab = null;
+
     @property(cc.Node)
     content : cc.Node = null;
+
+    @property(cc.Node)
+    icon : cc.Node = null;
 
     @property()
     public UrlData : any = [];
     public Client  = null;
     public config = null;
     public token: string = '';
+    public idx = 0;
+    //判断密码
+    public is_password = null;
+    //收款信息
+    public accountInfo = null;
 
     protected onLoad(): void {
         this.config = new Config();
         this.UrlData =  this.config.getUrlData();
-        this.UrlData.host = 'http://10.63.60.59:8088';
         this.token = this.config.token;
         this.Client = new ClientMessage();
+        this.fetchIndex();
+
+        this.loadImg('/bankIcon.png')
     }
 
-    exitBtnClick(){
-        this.Client.send('__done',{},()=>{})
+    public loadImg(url){
+        let self = this;
+        var node = new cc.Node('Sprite');
+        node.width = 10;
+        node.height = 10;
+        var sp = node.addComponent(cc.Sprite);
+        cc.loader.loadRes(url,cc.SpriteFrame,(err, spriteFrame)=>{
+            sp.spriteFrame = spriteFrame;
+            self.icon.addChild(node);
+        })
     }
 
-    showSellAlert(){
-        let node = cc.instantiate(this.SellAlert);
-        this.node.addChild(node);
-    }
+    public fetchIndex(){
+        this.idx = this.idx +1;
+        let url = `${this.UrlData.host}/api/with_draw/index?user_id=${this.UrlData.user_id}&token=${this.token}`;
+        fetch(url,{
+            method:'get'
+        }).then((data)=>data.json()).then((data)=>{
+            if(data.status == 0){
+                this.is_password = data.data.is_password;
+            }else{
+                this.showAlert(data.msg)
+            }
+        }).catch((error)=>{
+            if(this.idx>=5){
+                this.showAlert(' 网络错误，请重试！');
+                let self = this;
+                //3秒后自动返回大厅
+                setTimeout(()=>{self.Client.send('__backtohall',{},()=>{})},2000)
+            }else{
+                //重新请求数据
+                this.fetchIndex();
+            }
 
+        })
+
+        //请求支付信息
+        url = `${this.UrlData.host}/api/payment_account/accountInfo?user_id=${this.UrlData.user_id}&token=${this.token}`;
+        fetch(url, {
+            method: 'get'
+        }).then((data) => data.json()).then((data) => {
+            if (data.status == 0) {
+                this.accountInfo = data;
+            } else {
+                this.showAlert(data.msg)
+            }
+        }).catch((error)=>{
+            if(this.idx>=5){
+                this.showAlert(' 网络错误，请重试！');
+                let self = this;
+                //3秒后自动返回大厅
+                setTimeout(()=>{self.Client.send('__backtohall',{},()=>{})},2000)
+            }else{
+                //重新请求数据
+                this.fetchIndex();
+            }
+        });
+    }
 
     public getPublicInput(input,type) {
         var PublicInputAlert = cc.instantiate(this.PublicInputAlert);
@@ -117,45 +179,64 @@ export default class NewClass extends cc.Component {
             })
         })
     }
+    // 点击返回大厅
+    exitBtnClick(){
+        this.Client.send('__done',{},()=>{})
+    }
+    // 点击出售上架
+    shouSellClick(){
+        if(this.is_password){
+            if(this.is_password == 0){
+                this.showSetPasswordAlert(this);
+            }else if(this.accountInfo.data.has_account == 0){
+                this.showAlert('请先到收付款账号界面添加收付款方式！')
+            }else{
+                this.showTestPasswordAlert(2)
+            }
+        }
+    }
+    // 出售上架弹窗
+    showSellAlert(){
+        let node = cc.instantiate(this.SellAlert);
+        this.node.addChild(node);
+    }
 
+    // 公共小黑窗
     public showAlert(data) {
         var node = cc.instantiate(this.publicAlert);
         this.node.addChild(node);
         node.getComponent('PublicAlert').init(data);
     }
-
+    // 出售上架历史
     public showSellHistory(){
         var node = cc.instantiate(this.sellHistory);
         this.node.addChild(node);
     }
-
+    // 交易所
     public showMain(){
         var node = cc.instantiate(this.Main);
         this.content.addChild(node);
     }
-
+    // 赠送
     public showGive(){
         var node = cc.instantiate(this.Give);
         this.content.addChild(node);
     }
-
+    // 设置密码弹窗
     public showSetPasswordAlert(self){
         var node = cc.instantiate(this.SetPasswordAlert);
         this.node.addChild(node);
         node.getComponent('SetPasswordAlert').init({
             parentComponent:self
         })
-
     }
-
-    public showTestPasswordAlert(self,type){
+    // 验证密码弹窗
+    public showTestPasswordAlert(type){
         var node = cc.instantiate(this.TestPasswordAlert);
         this.node.addChild(node);
-        node.getComponent('TestPasswordAlert').init({
-            parentComponent:self,
-            type : type
-        })
+        node.getComponent('TestPasswordAlert').init(type)
     }
+    // 修改密码弹窗
     public showChangePasswordAlert(self){
         var node = cc.instantiate(this.ChangePasswordAlert);
         this.node.addChild(node);
@@ -163,27 +244,28 @@ export default class NewClass extends cc.Component {
             parentComponent:self
         })
     }
-
+    // 赠送历史
     public showGiveHistory(){
         var node = cc.instantiate(this.GiveHistory);
         this.content.addChild(node);
     }
-
+    // 受赠历史
     public showReceiveHistory(){
         var node = cc.instantiate(this.ReceiveHistory);
         this.content.addChild(node);
     }
-
+    // 收付款账号
     public showAccNum(){
         var node = cc.instantiate(this.AccNum);
+        this.content.removeAllChildren();
         this.content.addChild(node);
     }
-
+    // 添加账号类型弹窗
     public showAddTypeAlert(){
         var node = cc.instantiate(this.AddTypeAlert);
         this.node.addChild(node);
     }
-
+    // 添加支付宝账号弹窗
     public showAlipayAccountAlert(data){
         var node = cc.instantiate(this.AlipayAccountAlert);
         this.node.addChild(node);
@@ -193,7 +275,7 @@ export default class NewClass extends cc.Component {
             itemId:data.itemId
         })
     }
-
+    // 添加银行卡类型弹窗
     public showBankAccountAlert(data){
         var node = cc.instantiate(this.BankAccountAlert);
         this.node.addChild(node);
@@ -202,5 +284,11 @@ export default class NewClass extends cc.Component {
             action:data.action,
             itemId:data.itemId
         })
+    }
+
+    public showDeleteAccountAlert(data){
+        var node = cc.instantiate(this.DeleteAccountAlert);
+        this.node.addChild(node);
+        node.getComponent('DeleteAccountAlert').init(data)
     }
 }

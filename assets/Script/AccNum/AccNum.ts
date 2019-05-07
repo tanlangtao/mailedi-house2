@@ -22,7 +22,6 @@ export default class NewClass extends cc.Component {
     @property
     public results = null;
     public app = null;
-    public isReceive = true;
     onLoad () {
         this.app = cc.find('Canvas').getComponent('Canvas');
         this.fetchIndex()
@@ -41,13 +40,11 @@ export default class NewClass extends cc.Component {
             } else {
                 this.app.showAlert(data.msg)
             }
-            //收到结果
-            this.isReceive = true;
         })
     }
     init(){
-        for(let i = 0 ;i < this.results.data.length ;i++){
-            let data = this.results.data[i];
+        for(let i = 0 ;i < this.results.data.list.length ;i++){
+            let data = this.results.data.list[i];
             let node = cc.instantiate(this.accNumItem);
             this.accNumList.addChild(node);
             node.getComponent('AccNumItem').init(data);

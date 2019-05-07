@@ -36,11 +36,6 @@ export default class NewClass extends cc.Component {
         this.fetchIndex();
     }
 
-    start() {
-
-    }
-
-
     public fetchIndex() {
 
         var url = `${this.app.UrlData.host}/api/sell_gold/sellGoldHistory?&user_id=${this.app.UrlData.user_id}&page=${this.page}&page_set=8&token=${this.app.token}`;
@@ -63,14 +58,7 @@ export default class NewClass extends cc.Component {
             var node = cc.instantiate(this.SaleItem);
             this.saleGoldList.addChild(node);
             var data = this.results.data.list[i];
-            node.getComponent('SellItem').init({
-                created_at : data.created_at,
-                gold : data.gold,
-                down_at : data.down_at,
-                last_gold : data.last_gold,
-                consume_gold : data.traded_gold,
-                status : data.status
-            })
+            node.getComponent('SellItem').init(data)
         }
     }
     pageUp(){

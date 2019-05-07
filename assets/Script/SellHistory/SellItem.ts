@@ -20,34 +20,55 @@ export default class NewClass extends cc.Component {
     goldLabel: cc.Label = null;
 
     @property(cc.Label)
-    down_atLabel: cc.Label = null;
-
-    @property(cc.Label)
     last_goldLabel: cc.Label = null;
 
     @property(cc.Label)
-    consume_goldLabel: cc.Label = null;
+    exchange_priceLabel: cc.Label = null;
+
+    @property(cc.Label)
+    min_goldLabel: cc.Label = null;
+
+    @property(cc.Node)
+    pay_accountNode: cc.Node = null;
 
     @property(cc.Label)
     statusLabel: cc.Label = null;
 
+    @property(cc.Label)
+    RemarksLabel: cc.Label = null;
+
     @property
-    public results = {};
-    public config = null;
+    public data = null;
+    public app = null;
 
     onLoad () {
-        this.config = new Config();
+        this.app = cc.find('Canvas').getComponent('Canvas');
+    
+
     }
 
     public init(data){
-        this.created_atLabel.string =  this.config.getTime(data.created_at);
-        this.goldLabel.string = this.config.toDecimal(data.gold);
-        this.down_atLabel.string = data.down_at==0?"无": this.config.getTime(data.down_at);
-        this.last_goldLabel.string = this.config.toDecimal(data.last_gold);
-        this.consume_goldLabel.string =data.status == 3|| data.status == 5|| data.status == 6
-            ? this.config.toDecimal(data.consume_gold) :'0.00';
+        this.data = data;
+        //上架时间
+        this.created_atLabel.string =  this.app.config.getTime(data.created_at);
+        // 上架金币
+        this.goldLabel.string = this.app.config.toDecimal(data.gold);
+        //剩余金币
+        this.last_goldLabel.string = this.app.config.toDecimal(data.last_gold);
+        // 兑换单价
+        this.exchange_priceLabel.string = this.app.config.toDecimal(data.exchange_price);
+        //最低兑换数量
+        this.min_goldLabel.string = this.app.config.toDecimal(data.exchange_price);
+        // 兑换方式
+        let pay_account = JSON.stringify(data.pay_account);
+        console.log(pay_account);
+        //状态
         this.statusLabel.string = data.status == 1|| data.status == 2 ? '审核中'
             : (data.status == 4 ?'挂单中' :(data.status == 6?'已下架':'已拒绝'));
+        //备注
+
+        this.RemarksLabel.string = ''
+
     }
 
     start () {

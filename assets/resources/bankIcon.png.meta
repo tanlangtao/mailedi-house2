@@ -1,0 +1,31 @@
+{
+  "ver": "2.2.0",
+  "uuid": "0fcf35e8-88bf-40ad-ab90-055692985875",
+  "type": "sprite",
+  "wrapMode": "clamp",
+  "filterMode": "bilinear",
+  "premultiplyAlpha": false,
+  "subMetas": {
+    "bankIcon": {
+      "ver": "1.0.3",
+      "uuid": "f458f5d2-e5b3-4964-8cb9-271dc1998694",
+      "rawTextureUuid": "0fcf35e8-88bf-40ad-ab90-055692985875",
+      "trimType": "auto",
+      "trimThreshold": 1,
+      "rotated": false,
+      "offsetX": 0,
+      "offsetY": 0,
+      "trimX": 12,
+      "trimY": 48,
+      "width": 176,
+      "height": 104,
+      "rawWidth": 200,
+      "rawHeight": 200,
+      "borderTop": 0,
+      "borderBottom": 0,
+      "borderLeft": 0,
+      "borderRight": 0,
+      "subMetas": {}
+    }
+  }
+}

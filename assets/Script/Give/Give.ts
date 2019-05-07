@@ -54,6 +54,7 @@ export default class NewClass extends cc.Component {
     }
 
     public fetchIndex(){
+        this.idx = this.idx +1;
         var url = `${this.app.UrlData.host}/api/with_draw/index?user_id=${this.app.UrlData.user_id}&token=${this.app.token}`;
         fetch(url,{
             method:'get'
@@ -76,7 +77,6 @@ export default class NewClass extends cc.Component {
             }
         })
     }
-
 
     init(){
         var data = this.data.data;
@@ -119,14 +119,17 @@ export default class NewClass extends cc.Component {
     }
 
     accNumClick(){
-        this.app.showAccNum();
-        this.node.removeFromParent();
+        if(this.app.is_password == 1){
+            this.app.showTestPasswordAlert(1)
+        }else if (this.app.is_password == 0){
+            this.app.showSetPasswordAlert(this)
+        }
     }
 
     passwordClick(){
-        if(this.data.data.is_password == 1){
+        if(this.app.is_password == 1){
             this.app.showChangePasswordAlert(this)
-        }else{
+        }else if (this.app.is_password == 0){
             this.app.showSetPasswordAlert(this)
         }
     }

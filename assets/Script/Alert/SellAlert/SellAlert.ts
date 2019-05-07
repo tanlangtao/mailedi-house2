@@ -48,7 +48,7 @@ export default class NewClass extends cc.Component {
 
     @property()
     FormData = new FormData();
-    public results =  null;
+    public accountInfo =  null;
     public sell_gold = null;
     public app = null;
     public showZfbSelect = false;
@@ -56,8 +56,7 @@ export default class NewClass extends cc.Component {
     public isReceive = true;
     public zfbData = [];
     public bankData = [];
-    public ZfbInfo = null;
-    public BankInfo = null;
+    public Info = [];
     onLoad () {
         this.app = cc.find('Canvas').getComponent('Canvas');
         this.app.getPublicInput(this.amountInput,1);
@@ -67,22 +66,10 @@ export default class NewClass extends cc.Component {
     }
 
     public fetchIndex() {
-        //请求支付信息
-        let url = `${this.app.UrlData.host}/api/payment_account/accountInfo?user_id=${this.app.UrlData.user_id}&token=${this.app.token}`;
-        fetch(url, {
-            method: 'get'
-        }).then((data) => data.json()).then((data) => {
-            if (data.status == 0) {
-                this.results = data;
-                this.init();
-            } else {
-                this.app.showAlert(data.msg)
-            }
-            //收到结果
-            this.isReceive = true;
-        });
+        this.accountInfo = this.app.accountInfo;
+        this.init();
         //申请出售金币接口
-        url = `${this.app.UrlData.host}/api/sell_gold/applyIndex?token=${this.app.token}`;
+        let url = `${this.app.UrlData.host}/api/sell_gold/applyIndex?token=${this.app.token}`;
         fetch(url, {
             method: 'get'
         }).then((data) => data.json()).then((data) => {
@@ -100,8 +87,8 @@ export default class NewClass extends cc.Component {
 
     }
     init(){
-        for(let i = 0 ;i < this.results.data.length ;i++){
-            let data = this.results.data[i];
+        for(let i = 0 ;i < this.accountInfo.data.list.length ;i++){
+            let data = this.accountInfo.data.list[i];
             if(data.type == 2){
                 this.zfbData.push(data)
             }else if (data.type == 3){
@@ -111,6 +98,10 @@ export default class NewClass extends cc.Component {
     }
 
     selectZfbClick(){
+        if(this.zfbData.length == 0) {
+            this.app.showAlert('未设置支付宝');
+            return;
+        }
         this.selectBankContent.removeAllChildren();
         if(!this.showZfbSelect && this.isReceive){
             for( var i = 0 ; i < this.zfbData.length ; i++){
@@ -121,7 +112,7 @@ export default class NewClass extends cc.Component {
                     Label:this.selectZfbLabel,
                     showSelect:this.showZfbSelect,
                     selectContent:this.selectZfbContent,
-                    info:JSON.parse(this.zfbData[i].info),
+                    data:this.zfbData[i],
                     parentCom:this
                 })
             }
@@ -132,6 +123,10 @@ export default class NewClass extends cc.Component {
         }
     }
     selectBankClick(){
+        if(this.bankData.length == 0) {
+            this.app.showAlert('未设置银行卡');
+            return;
+        }
         this.selectZfbContent.removeAllChildren();
         if(!this.showBankSelect && this.isReceive){
             for( var i = 0 ; i < this.bankData.length ; i++){
@@ -142,7 +137,7 @@ export default class NewClass extends cc.Component {
                     Label:this.selectBankLabel,
                     showSelect:this.showBankSelect,
                     selectContent:this.selectBankContent,
-                    info:JSON.parse(this.bankData[i].info),
+                    data:this.bankData[i],
                     parentCom:this
                 })
             }
@@ -154,25 +149,45 @@ export default class NewClass extends cc.Component {
     }
 
     onClick(){
-        console.log(this.BankInfo,this.ZfbInfo)
-        this.submitSellGoldInfo();
-        this.node.removeFromParent();
+        let amount = Number(this.amountInput.string);
+        let price = Number(this.priceInput.string);
+        let sill = Number(this.sillInput.string);
+        let minAmount = Number(this.sell_gold.min_amount);
+        let maxAmount = Number(this.sell_gold.max_amount);
+        let minPrice = Number(this.sell_gold.min_exchange_price);
+        let maxPrice = Number(this.sell_gold.max_exchange_price);
+        let minSill = Number(this.sell_gold.min_exchange_gold);
+        if(this.amountInput.string == ''||this.priceInput.string == ''||this.sillInput.string ==''){
+            this.app.showAlert('上架信息不能为空！');
+        }else if(this.Info.length == 0){
+            this.app.showAlert('请至少选择一种收款方式！');
+        }else if(amount > maxAmount || amount < minAmount){
+            this.app.showAlert('金币不符合范围');
+        }else if(price > maxPrice || price < minPrice){
+            this.app.showAlert('单价不符合范围');
+        }else if(sill < minSill){
+            this.app.showAlert('最低交易额不符合范围！');
+        }else{
+            this.submitSellGoldInfo();
+            this.node.removeFromParent();
+        }
     }
 
     public submitSellGoldInfo(){
+        let pay_account = [];
+        this.Info.forEach((item,index)=>{
+            if(item){
+                pay_account.push(item)
+            }
+        });
+        // let pay_account = this.Info);
         var url = `${this.app.UrlData.host}/api/sell_gold/submitSellGoldInfo`;
-        let pay_account = null;
-        if(this.ZfbInfo){
-            pay_account.push(this.ZfbInfo)
-        }else if(this.ZfbInfo){
-            pay_account.push(this.BankInfo)
-        }
         this.FormData = new FormData();
         this.FormData.append('user_id', this.app.UrlData.user_id)
         this.FormData.append('user_name', decodeURI(this.app.UrlData.user_name))
         this.FormData.append('gold', this.amountInput.string)
         this.FormData.append('exchange_price', this.priceInput.string)
-        this.FormData.append('pay_account', pay_account)
+        this.FormData.append('pay_account', JSON.stringify(pay_account))
         this.FormData.append('min_gold', this.sillInput.string)
         this.FormData.append('client', this.app.UrlData.client)
         this.FormData.append('proxy_user_id', this.app.UrlData.proxy_user_id)

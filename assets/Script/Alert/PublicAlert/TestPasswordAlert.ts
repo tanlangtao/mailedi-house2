@@ -16,16 +16,12 @@ export default class NewClass extends cc.Component {
     passwordInput: cc.EditBox = null;
 
     @property()
-    public UrlData : any = [];
-    public token : string = '';
     FormData = new FormData();
-    parentComponent  = null;
     showSelect = false;
     type  = null;
     public  app = null;
-    public init(data){
-        this.parentComponent = data.parentComponent;
-        this.type = data.type;
+    public init(type){
+        this.type = type;
     }
     // LIFE-CYCLE CALLBACKS:
 
@@ -51,33 +47,24 @@ export default class NewClass extends cc.Component {
     }
 
     fetchcheckPassword(){
-        var url = `${this.UrlData.host}/api/user_funds_password/checkPassword?user_id=${this.UrlData.user_id}&password=${this.passwordInput.string}&token=${this.token}`;
+        var url = `${this.app.UrlData.host}/api/user_funds_password/checkPassword?user_id=${this.app.UrlData.user_id}&password=${this.passwordInput.string}&token=${this.app.token}`;
         fetch(url,{
             method:'GET',
         }).then((data)=>data.json()).then((data)=>{
             if(data.status == 0){
-                // type=1,弹出绑定帐户
-                // type =2 , 确认兑换
-                // type =3 , 申请人工兑换
-                // type =4 , 确认出售金币
-                // type =5 , 确认回收金币
-                // type =6 , 确认赠送
+                // type = 1,
                 if(this.type == 1){
                     var self = this;
                     var timer = setTimeout(()=>{
-                        self.parentComponent.showAccountAlert()
+                        self.app.showAccNum()
                         clearTimeout(timer);
-                    },500)
+                    },400)
                 }else if(this.type == 2){
-                    this.parentComponent.fetchwithDrawApply();
-                }else if(this.type == 3){
-                    this.parentComponent.fetchRgDh();
-                }else if(this.type == 4){
-                    this.parentComponent.fetchSell_gold();
-                }else if(this.type == 5){
-                    this.parentComponent.fetchsubmitRecycleGoldInfo();
-                }else if(this.type == 6){
-                    this.parentComponent.fetchGive();
+                    var self = this;
+                    var timer = setTimeout(()=>{
+                        self.app.showSellAlert()
+                        clearTimeout(timer);
+                    },400)
                 }
 
             }else{
