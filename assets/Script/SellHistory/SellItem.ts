@@ -37,13 +37,17 @@ export default class NewClass extends cc.Component {
     @property(cc.Label)
     RemarksLabel: cc.Label = null;
 
+    @property(cc.Node)
+    btn: cc.Node = null;
+
     @property
+    FormData = new FormData();
     public data = null;
     public app = null;
 
     onLoad () {
         this.app = cc.find('Canvas').getComponent('Canvas');
-    
+        this.btn.active = false;
 
     }
 
@@ -60,23 +64,49 @@ export default class NewClass extends cc.Component {
         //最低兑换数量
         this.min_goldLabel.string = this.app.config.toDecimal(data.exchange_price);
         // 兑换方式
-        let pay_account = JSON.stringify(data.pay_account);
+        let pay_account = JSON.parse(data.pay_account);
+        pay_account.forEach((item,index)=>{
+            if(item.type == 2){
+                this.app.loadIcon('/zfbIcon',this.pay_accountNode)
+            }else if(item.type == 3){
+                this.app.loadIcon('/bankIcon',this.pay_accountNode)
+            }
+        })
         console.log(pay_account);
         //状态
         this.statusLabel.string = data.status == 1|| data.status == 2 ? '审核中'
-            : (data.status == 4 ?'挂单中' :(data.status == 6?'已下架':'已拒绝'));
+            : (data.status == 4 ?'已上架' :'已下架');
         //备注
-
         this.RemarksLabel.string = ''
 
-    }
-
-    start () {
+        data.status == 4 ? this.btn.active = true : '';
 
     }
 
     onClick(){
-
+        this.fetchDownSellGold();
     }
-    // update (dt) {}
+
+    // 下架
+    fetchDownSellGold(){
+        let SellHistory = cc.find('Canvas/SellHistory').getComponent('SellHistory');
+
+        let url = `${this.app.UrlData.host}/api/sell_gold/downSellGold`;
+        this.FormData= new FormData();
+        this.FormData.append('id',this.data.id);
+        this.FormData.append('user_id',this.app.UrlData.user_id);
+        this.FormData.append('token',this.app.token);
+        fetch(url,{
+            method:'POST',
+            body:this.FormData
+        }).then((data)=>data.json()).then((data)=>{
+            if(data.status == 0){
+                //刷新界面
+                SellHistory.fetchIndex();
+                this.app.showAlert('操作成功！')
+            }else{
+                this.app.showAlert(data.msg)
+            }
+        })
+    }
 }

@@ -27,6 +27,7 @@ export default class NewClass extends cc.Component {
     public FormData = new FormData();
     public page = 1;
     public app  = null;
+    public status = 0;
     // LIFE-CYCLE CALLBACKS:
 
     onLoad() {
@@ -38,7 +39,7 @@ export default class NewClass extends cc.Component {
 
     public fetchIndex() {
 
-        var url = `${this.app.UrlData.host}/api/sell_gold/sellGoldHistory?&user_id=${this.app.UrlData.user_id}&page=${this.page}&page_set=8&token=${this.app.token}`;
+        var url = `${this.app.UrlData.host}/api/sell_gold/sellGoldHistory?&user_id=${this.app.UrlData.user_id}&status=${this.status}&page=${this.page}&page_set=8&token=${this.app.token}`;
         fetch(url, {
             method: 'get'
         }).then((data) => data.json()).then((data) => {
@@ -61,6 +62,27 @@ export default class NewClass extends cc.Component {
             node.getComponent('SellItem').init(data)
         }
     }
+    //全部
+    toggle1Click(){
+        this.status = 0;
+        this.fetchIndex();
+    }
+    //上架中
+    toggle2Click(){
+        this.status = 4;
+        this.fetchIndex();
+    }
+    //审核中
+    toggle3Click(){
+        this.status = 1;
+        this.fetchIndex();
+    }
+    //已下架
+    toggle4Click(){
+        this.status = 6;
+        this.fetchIndex();
+    }
+
     pageUp(){
         if(this.page > 1){
             this.page = this.page - 1;

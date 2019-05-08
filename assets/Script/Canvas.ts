@@ -66,9 +66,6 @@ export default class NewClass extends cc.Component {
     @property(cc.Node)
     content : cc.Node = null;
 
-    @property(cc.Node)
-    icon : cc.Node = null;
-
     @property()
     public UrlData : any = [];
     public Client  = null;
@@ -87,18 +84,18 @@ export default class NewClass extends cc.Component {
         this.Client = new ClientMessage();
         this.fetchIndex();
 
-        this.loadImg('/bankIcon.png')
     }
 
-    public loadImg(url){
-        let self = this;
+    public loadIcon(url,parent){
         var node = new cc.Node('Sprite');
-        node.width = 10;
-        node.height = 10;
+
         var sp = node.addComponent(cc.Sprite);
         cc.loader.loadRes(url,cc.SpriteFrame,(err, spriteFrame)=>{
             sp.spriteFrame = spriteFrame;
-            self.icon.addChild(node);
+            sp.sizeMode = cc.Sprite.SizeMode.CUSTOM;
+            node.width = 20;
+            node.height = 20;
+            parent.addChild(node);
         })
     }
 
