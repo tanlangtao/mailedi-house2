@@ -100,6 +100,15 @@ export default class Config extends cc.Component {
         var newDate =  m + "-" + d + " " + h + ":" + minute + ":" + s;
         return newDate;
     }
+    //时间戳转换
+    public getTime2(time){
+        let timer = Number(time);
+        var h = Math.floor(timer/60/60) > 9 ? Math.floor(timer/60/60) : `0${Math.floor(timer/60/60)}`;
+        var minute = Math.floor(timer/60%60) > 9 ? Math.floor(timer/60%60): `0${Math.floor(timer/60%60)}`;
+        var s = timer%60 > 9 ? timer%60 : `0${timer%60}`;
+        var newDate =  h + "时" + minute + "分" + s +'秒';
+        return newDate;
+    }
 
     public testBankNum(num){
         if (isNaN(num)) {

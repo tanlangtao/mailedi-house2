@@ -13,9 +13,6 @@ const {ccclass, property} = cc._decorator;
 export default class NewClass extends cc.Component {
 
     @property(cc.Label)
-    numberLabel: cc.Label = null;
-
-    @property(cc.Label)
     startTimeLabel: cc.Label = null;
 
     @property(cc.Label)
@@ -30,26 +27,42 @@ export default class NewClass extends cc.Component {
     @property(cc.Label)
     sillLabel: cc.Label = null;
 
-    @property(cc.Label)
-    typeLabel: cc.Label = null;
+    @property(cc.Node)
+    pay_accountNode: cc.Node = null;
 
     @property(cc.Label)
     averageTimeLabel: cc.Label = null;
 
     @property
-    public results = {};
+    public data = null;
     public parentComponent = null;
     public app = null;
     onLoad () {
         this.app = cc.find('Canvas').getComponent('Canvas');
     }
 
-    public init(data,parentComponent){
-        this.parentComponent = parentComponent;
+    public init(data){
+        this.data = data;
+        this.startTimeLabel.string = this.app.config.getTime(data.up_at);
+        this.startGoldLabel.string = this.app.config.toDecimal(data.gold);
+        this.remainderGoldLabel.string = this.app.config.toDecimal(data.last_gold);
+        this.priceLabel.string = this.app.config.toDecimal(data.exchange_price);
+        this.sillLabel.string = this.app.config.toDecimal(data.min_gold);
+        // 兑换方式
+        let pay_account = JSON.parse(data.pay_account);
+        pay_account.forEach((item,index)=>{
+            if(item.type == 2){
+                this.app.loadIcon('/zfbIcon',this.pay_accountNode)
+            }else if(item.type == 3){
+                this.app.loadIcon('/bankIcon',this.pay_accountNode)
+            }
+        });
+        this.averageTimeLabel.string = data.average_complete_time == 0 ? '无' :`${this.app.config.getTime2(data.average_complete_time)}`;
     }
 
     onClick(){
-
+        // 点击交易
+        this.app.showWriteGoldAlert(this.data);
     }
     // update (dt) {}
 }

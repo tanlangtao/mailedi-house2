@@ -84,9 +84,14 @@ export default class NewClass extends cc.Component {
         let info = JSON.stringify(obj);
         this.FormData= new FormData();
         this.FormData.append('user_id',this.app.UrlData.user_id);
+        this.FormData.append('user_name',decodeURI(this.app.UrlData.user_name));
         this.FormData.append('action',this.action);
         this.FormData.append('type','3');
         this.FormData.append('info',info);
+        this.FormData.append('client', this.app.UrlData.client)
+        this.FormData.append('proxy_user_id', this.app.UrlData.proxy_user_id)
+        this.FormData.append('proxy_name', decodeURI(this.app.UrlData.proxy_name))
+        this.FormData.append('package_id', this.app.UrlData.package_id)
         this.FormData.append('token',this.app.token);
         if(this.action == 'edit'){
             this.FormData.append('id',this.itemId);

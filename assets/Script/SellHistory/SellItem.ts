@@ -72,7 +72,6 @@ export default class NewClass extends cc.Component {
                 this.app.loadIcon('/bankIcon',this.pay_accountNode)
             }
         })
-        console.log(pay_account);
         //状态
         this.statusLabel.string = data.status == 1|| data.status == 2 ? '审核中'
             : (data.status == 4 ?'已上架' :'已下架');

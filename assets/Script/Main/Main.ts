@@ -22,6 +22,9 @@ export default class NewClass extends cc.Component {
     @property(cc.Node)
     public mainList : cc.Node = null;
 
+    @property(cc.Label)
+    public pageLabel : cc.Label = null;
+
     @property
     public results = null;
     public page = 1;
@@ -32,6 +35,28 @@ export default class NewClass extends cc.Component {
     }
 
     public fetchIndex(){
+        var url = `${this.app.UrlData.host}/api/sell_gold/sellGoldList?page=${this.page}&page_set=8&token=${this.app.token}`;
+        fetch(url, {
+            method: 'get'
+        }).then((data) => data.json()).then((data) => {
+            this.mainList.removeAllChildren();
+            if (data.status == 0) {
+                this.results = data;
+                this.init();
+            } else {
+                this.app.showAlert(data.msg);
+            }
+        })
+    }
+
+    public  init(){
+        this.pageLabel.string = `${this.page} / ${Number(this.results.data.total_page) == 0 ? '1' : this.results.data.total_page}`;
+        for(let i = 0 ;i<this.results.data.list.length; i++){
+            var node = cc.instantiate(this.mainItem);
+            this.mainList.addChild(node);
+            var data = this.results.data.list[i];
+            node.getComponent('MainItem').init(data)
+        }
     }
 
     accNumClick(){

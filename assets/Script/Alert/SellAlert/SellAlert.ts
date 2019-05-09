@@ -157,10 +157,14 @@ export default class NewClass extends cc.Component {
         let minPrice = Number(this.sell_gold.min_exchange_price);
         let maxPrice = Number(this.sell_gold.max_exchange_price);
         let minSill = Number(this.sell_gold.min_exchange_gold);
+        //剩余金币
+        let gameGold = Number(this.app.game_gold);
         if(this.amountInput.string == ''||this.priceInput.string == ''||this.sillInput.string ==''){
             this.app.showAlert('上架信息不能为空！');
         }else if(this.Info.length == 0){
             this.app.showAlert('请至少选择一种收款方式！');
+        }else if(amount > gameGold){
+            this.app.showAlert(`当前剩余金币${gameGold}！`);
         }else if(amount > maxAmount || amount < minAmount){
             this.app.showAlert('金币不符合范围');
         }else if(price > maxPrice || price < minPrice){

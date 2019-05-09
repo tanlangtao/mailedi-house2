@@ -63,6 +63,9 @@ export default class NewClass extends cc.Component {
     @property(cc.Prefab)
     DeleteAccountAlert : cc.Prefab = null;
 
+    @property(cc.Prefab)
+    WriteGoldAlert : cc.Prefab = null;
+
     @property(cc.Node)
     content : cc.Node = null;
 
@@ -74,6 +77,8 @@ export default class NewClass extends cc.Component {
     public idx = 0;
     //判断密码
     public is_password = null;
+    //剩余金额
+    public game_gold = null;
     //收款信息
     public accountInfo = null;
 
@@ -107,6 +112,7 @@ export default class NewClass extends cc.Component {
         }).then((data)=>data.json()).then((data)=>{
             if(data.status == 0){
                 this.is_password = data.data.is_password;
+                this.game_gold = data.data.game_gold;
             }else{
                 this.showAlert(data.msg)
             }
@@ -287,5 +293,11 @@ export default class NewClass extends cc.Component {
         var node = cc.instantiate(this.DeleteAccountAlert);
         this.node.addChild(node);
         node.getComponent('DeleteAccountAlert').init(data)
+    }
+
+    public showWriteGoldAlert(data){
+        var node = cc.instantiate(this.WriteGoldAlert);
+        this.node.addChild(node);
+        node.getComponent('WriteGoldAlert').init(data)
     }
 }
