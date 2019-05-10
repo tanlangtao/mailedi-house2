@@ -184,7 +184,6 @@ export default class NewClass extends cc.Component {
                 pay_account.push(item)
             }
         });
-        // let pay_account = this.Info);
         var url = `${this.app.UrlData.host}/api/sell_gold/submitSellGoldInfo`;
         this.FormData = new FormData();
         this.FormData.append('user_id', this.app.UrlData.user_id)
@@ -209,10 +208,6 @@ export default class NewClass extends cc.Component {
                 this.app.showAlert(data.msg);
             }
         })
-    }
-
-    historyClick(){
-        this.app.showSellHistory();
     }
 
     deleteAmount(){

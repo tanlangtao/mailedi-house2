@@ -28,6 +28,9 @@ export default class NewClass extends cc.Component {
     sellHistory : cc.Prefab = null;
 
     @property(cc.Prefab)
+    TradeHistory : cc.Prefab = null;
+
+    @property(cc.Prefab)
     Main : cc.Prefab = null;
 
     @property(cc.Prefab)
@@ -66,6 +69,9 @@ export default class NewClass extends cc.Component {
     @property(cc.Prefab)
     WriteGoldAlert : cc.Prefab = null;
 
+    @property(cc.Prefab)
+    CancleAlert : cc.Prefab = null;
+
     @property(cc.Node)
     content : cc.Node = null;
 
@@ -87,8 +93,12 @@ export default class NewClass extends cc.Component {
         this.UrlData =  this.config.getUrlData();
         this.token = this.config.token;
         this.Client = new ClientMessage();
+        this.UrlData.host = 'http://new.recharge.0717996.com';
         this.fetchIndex();
+    }
 
+    start(){
+        this.Client.send('__done',{},()=>{})
     }
 
     public loadIcon(url,parent){
@@ -184,7 +194,7 @@ export default class NewClass extends cc.Component {
     }
     // 点击返回大厅
     exitBtnClick(){
-        this.Client.send('__done',{},()=>{})
+        this.Client.send('__backtohall',{},()=>{})
     }
     // 点击出售上架
     shouSellClick(){
@@ -213,6 +223,11 @@ export default class NewClass extends cc.Component {
     // 出售上架历史
     public showSellHistory(){
         var node = cc.instantiate(this.sellHistory);
+        this.node.addChild(node);
+    }
+    // 交易历史
+    public showTradeHistory(){
+        var node = cc.instantiate(this.TradeHistory);
         this.node.addChild(node);
     }
     // 交易所
@@ -288,16 +303,21 @@ export default class NewClass extends cc.Component {
             itemId:data.itemId
         })
     }
-
+    //删账号弹窗
     public showDeleteAccountAlert(data){
         var node = cc.instantiate(this.DeleteAccountAlert);
         this.node.addChild(node);
         node.getComponent('DeleteAccountAlert').init(data)
     }
-
+    //交易弹窗
     public showWriteGoldAlert(data){
         var node = cc.instantiate(this.WriteGoldAlert);
         this.node.addChild(node);
         node.getComponent('WriteGoldAlert').init(data)
+    }
+    public showCancleAlert(data){
+        var node = cc.instantiate(this.CancleAlert);
+        this.node.addChild(node);
+        node.getComponent('CancleAlert').init(data)
     }
 }

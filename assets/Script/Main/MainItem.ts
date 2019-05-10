@@ -44,10 +44,10 @@ export default class NewClass extends cc.Component {
     public init(data){
         this.data = data;
         this.startTimeLabel.string = this.app.config.getTime(data.up_at);
-        this.startGoldLabel.string = this.app.config.toDecimal(data.gold);
-        this.remainderGoldLabel.string = this.app.config.toDecimal(data.last_gold);
+        this.startGoldLabel.string = `${parseInt(data.gold)}`;
+        this.remainderGoldLabel.string = `${parseInt(data.last_gold)}`;
         this.priceLabel.string = this.app.config.toDecimal(data.exchange_price);
-        this.sillLabel.string = this.app.config.toDecimal(data.min_gold);
+        this.sillLabel.string = `${parseInt(data.min_gold)}`;
         // 兑换方式
         let pay_account = JSON.parse(data.pay_account);
         pay_account.forEach((item,index)=>{
@@ -62,7 +62,12 @@ export default class NewClass extends cc.Component {
 
     onClick(){
         // 点击交易
-        this.app.showWriteGoldAlert(this.data);
+        if(this.data.user_id == this.app.UrlData.user_id){
+            this.app.showAlert('不能与自己交易！')
+        }else{
+            this.app.showWriteGoldAlert(this.data);
+        }
+
     }
     // update (dt) {}
 }

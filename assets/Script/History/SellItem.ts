@@ -56,13 +56,13 @@ export default class NewClass extends cc.Component {
         //上架时间
         this.created_atLabel.string =  this.app.config.getTime(data.created_at);
         // 上架金币
-        this.goldLabel.string = this.app.config.toDecimal(data.gold);
+        this.goldLabel.string = `${parseInt(data.gold)}`;
         //剩余金币
-        this.last_goldLabel.string = this.app.config.toDecimal(data.last_gold);
+        this.last_goldLabel.string = `${parseInt(data.last_gold)}`;
         // 兑换单价
         this.exchange_priceLabel.string = this.app.config.toDecimal(data.exchange_price);
         //最低兑换数量
-        this.min_goldLabel.string = this.app.config.toDecimal(data.exchange_price);
+        this.min_goldLabel.string = `${parseInt(data.exchange_price)}`;
         // 兑换方式
         let pay_account = JSON.parse(data.pay_account);
         pay_account.forEach((item,index)=>{

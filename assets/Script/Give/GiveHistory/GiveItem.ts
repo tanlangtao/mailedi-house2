@@ -7,7 +7,6 @@
 // Learn life-cycle callbacks:
 //  - [Chinese] https://docs.cocos.com/creator/manual/zh/scripting/life-cycle-callbacks.html
 //  - [English] http://www.cocos2d-x.org/docs/creator/manual/en/scripting/life-cycle-callbacks.html
-import Config from "../../../Config"
 const {ccclass, property} = cc._decorator;
 
 @ccclass
@@ -34,16 +33,16 @@ export default class NewClass extends cc.Component {
     @property
     public results = {};
     public config = null;
-
+    public  app = null;
     onLoad () {
-        this.config = new Config();
+        this.app = cc.find('Canvas').getComponent('Canvas');
     }
 
     public init(data){
         this.IdLabel.string = data.replace_id;
-        this.amountLabel.string = this.config.toDecimal(data.amount);
-        this.creteTimeLabel.string = this.config.getTime(data.created_at);
-        this.finishTimeLabel.string = data.arrival_at == 0? '无' :this.config.getTime(data.arrival_at);
+        this.amountLabel.string = this.app.config.toDecimal(data.amount);
+        this.creteTimeLabel.string = this.app.config.getTime(data.created_at);
+        this.finishTimeLabel.string = data.arrival_at == 0? '无' :this.app.config.getTime(data.arrival_at);
         this.statusLabel.string = data.status == 8 ? '已完成' :(data.status == 3 || data.status == 5 ?'已拒绝':'未完成');
         this.remarkLabel.string = !data.user_remark ?'':data.user_remark.substring(0,14);
     }

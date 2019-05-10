@@ -41,14 +41,52 @@ export default class NewClass extends cc.Component {
         {
             this.app.showAlert('输入不能为空!')
         }else{
-            this.fetchBindAccountPay();
-            this.node.removeFromParent();
+            this.fetchCheckOrder();
+
         }
     }
+    fetchCheckOrder(){
+        let url = `${this.app.UrlData.host}/api/trading_order/checkOrder?user_id=${this.app.UrlData.user_id}&token=${this.app.token}`;
+        fetch(url,{
+            method:'GET',
+        }).then((data)=>data.json()).then((data)=>{
+            if(data.status == 0){
+                //判断是否存在订单
+                if(data.data.is_exist == 0){
+                    this.fetchVeify();
+                }else{
+                    this.app.showCancleAlert(data.data);
+                }
+                this.node.removeFromParent();
+            }else{
+                this.app.showAlert(data.msg)
+            }
+        })
+    }
+    fetchVeify(){
+        // let IMserver = "http://10.63.60.112:9090";
+        let IMserver = "http://47.75.133.82:9090";
+        let url = `${IMserver}/verify`;
+        this.FormData= new FormData();
+        this.FormData.append('user_id',this.app.UrlData.user_id);
+        fetch(url,{
+            method:'POST',
+            body:this.FormData
+        }).then((data)=>data.json()).then((data)=>{
+            if(data.code == 0){
+                this.fetchBindAccountPay();
 
+            }else{
+                this.app.showAlert(`请等待${30-data.seconds}秒后再次交易！`)
+            }
+        })
+
+    }
     fetchBindAccountPay(){
-        this.app.UrlData.host = "http://10.63.60.112:9090";
-        let url = `${this.app.UrlData.host}/transaction`;
+        // let IMserver = "http://10.63.60.112:9090";
+        let IMserver = "http://47.75.133.82:9090";
+        let url = `${IMserver}/transaction`;
+
         let amount = Number(this.amountInput.string)*Number(this.data.exchange_price);
         this.FormData= new FormData();
         this.FormData.append('user_id',this.app.UrlData.user_id);
@@ -57,9 +95,8 @@ export default class NewClass extends cc.Component {
         this.FormData.append('replace_name',this.data.user_name);
         this.FormData.append('gold',this.amountInput.string);
         this.FormData.append('amount',`${amount}`);
-        this.FormData.append('sell_id','1');
-        this.FormData.append('exchange_price','1');
-        this.FormData.append('replace_name','1');
+        this.FormData.append('sell_id',this.data.sell_id);
+        this.FormData.append('exchange_price',this.data.exchange_price);
         this.FormData.append('client', this.app.UrlData.client)
         this.FormData.append('proxy_user_id', this.app.UrlData.proxy_user_id)
         this.FormData.append('proxy_name', decodeURI(this.app.UrlData.proxy_name))
@@ -69,11 +106,11 @@ export default class NewClass extends cc.Component {
             method:'POST',
             body:this.FormData
         }).then((data)=>data.json()).then((data)=>{
-            if(data.status == 0){
+            if(data.code == 0){
                 // 刷新app数据
                 this.app.fetchIndex();
 
-                this.app.showAlert('操作成功！')
+                this.app.showAlert('操作成功,请移至IM交易！')
             }else{
                 this.app.showAlert(data.msg)
             }
