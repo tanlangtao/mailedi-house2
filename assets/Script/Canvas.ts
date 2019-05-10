@@ -198,14 +198,14 @@ export default class NewClass extends cc.Component {
     }
     // 点击出售上架
     shouSellClick(){
-        if(this.is_password){
-            if(this.is_password == 0){
-                this.showSetPasswordAlert(this);
-            }else if(this.accountInfo.data.has_account == 0){
+        if(this.is_password == 1){
+            if(this.accountInfo.data.has_account == 0){
                 this.showAlert('请先到收付款账号界面添加收付款方式！')
             }else{
                 this.showTestPasswordAlert(2)
             }
+        }else{
+            this.showSetPasswordAlert(this);
         }
     }
     // 出售上架弹窗
