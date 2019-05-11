@@ -3289,7 +3289,7 @@
       "__uuid__": "71ac9b7c-84cf-4425-9cb6-19244549d119"
     },
     "_type": 0,
-    "_sizeMode": 2,
+    "_sizeMode": 0,
     "_fillType": 0,
     "_fillCenter": {
       "__type__": "cc.Vec2",
@@ -3863,7 +3863,7 @@
       "__uuid__": "71ac9b7c-84cf-4425-9cb6-19244549d119"
     },
     "_type": 0,
-    "_sizeMode": 2,
+    "_sizeMode": 0,
     "_fillType": 0,
     "_fillCenter": {
       "__type__": "cc.Vec2",
@@ -4802,7 +4802,7 @@
     "_enabled": true,
     "alignMode": 1,
     "_target": null,
-    "_alignFlags": 9,
+    "_alignFlags": 0,
     "_left": 1058.5,
     "_right": 0,
     "_top": 87,

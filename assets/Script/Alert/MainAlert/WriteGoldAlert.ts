@@ -36,9 +36,9 @@ export default class NewClass extends cc.Component {
     }
 
     onClick(){
-
-        if( this.amountInput.string == '')
-        {
+        if(Number(this.data.min_gold) >Number(this.amountInput.string)){
+            this.app.showAlert('小于最低交易额!')
+        }else if( this.amountInput.string == ''){
             this.app.showAlert('输入不能为空!')
         }else{
             this.fetchCheckOrder();
@@ -64,8 +64,8 @@ export default class NewClass extends cc.Component {
         })
     }
     fetchVeify(){
-        // let IMserver = "http://10.63.60.112:9090";
-        let IMserver = "http://47.75.133.82:9090";
+        let IMserver = CC_BUILD ?  "http://47.75.133.82:9090" : "http://10.63.60.112:9090" ;
+
         let url = `${IMserver}/verify`;
         this.FormData= new FormData();
         this.FormData.append('user_id',this.app.UrlData.user_id);
@@ -83,8 +83,8 @@ export default class NewClass extends cc.Component {
 
     }
     fetchBindAccountPay(){
-        // let IMserver = "http://10.63.60.112:9090";
-        let IMserver = "http://47.75.133.82:9090";
+        let IMserver = CC_BUILD ?  "http://47.75.133.82:9090" : "http://10.63.60.112:9090" ;
+
         let url = `${IMserver}/transaction`;
 
         let amount = Number(this.amountInput.string)*Number(this.data.exchange_price);

@@ -41,8 +41,8 @@
     },
     "_scale": {
       "__type__": "cc.Vec3",
-      "x": 0.5625130920141628,
-      "y": 0.5625130920141628,
+      "x": 0.6654792033450704,
+      "y": 0.6654792033450704,
       "z": 1
     },
     "_quat": {
@@ -4735,8 +4735,8 @@
     },
     "_enabled": true,
     "_useOriginalSize": false,
-    "_string": "1.5",
-    "_N$string": "1.5",
+    "_string": "1.7",
+    "_N$string": "1.7",
     "_fontSize": 20,
     "_lineHeight": 40,
     "_enableWrapText": true,

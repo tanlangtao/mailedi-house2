@@ -15,6 +15,9 @@ const {ccclass, property} = cc._decorator;
 export default class NewClass extends cc.Component {
 
     @property(cc.Label)
+    typeLabel: cc.Label = null;
+
+    @property(cc.Label)
     order_idLabel: cc.Label = null;
 
     @property(cc.Label)
@@ -46,6 +49,7 @@ export default class NewClass extends cc.Component {
 
     public init(data){
         this.data = data;
+        this.typeLabel.string = data.user_id ==this.app.UrlData.user_id ? '买入' :'卖出';
         this.order_idLabel.string = data.order_id.slice(-6);
         //交易ID，显示对方的ID;
         this.user_idLabel.string = data.user_id == this.app.UrlData.user_id ? data.replace_id:data.user_id;

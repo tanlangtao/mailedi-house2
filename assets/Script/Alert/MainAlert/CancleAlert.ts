@@ -47,7 +47,7 @@ export default class NewClass extends cc.Component {
             method:'POST',
             body:this.FormData
         }).then((data)=>data.json()).then((data)=>{
-            if(data.code == 0){
+            if(data.status == 0){
                 // 刷新app数据
                 this.app.fetchIndex();
 

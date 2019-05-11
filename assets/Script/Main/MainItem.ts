@@ -62,11 +62,16 @@ export default class NewClass extends cc.Component {
 
     onClick(){
         // 点击交易
-        if(this.data.user_id == this.app.UrlData.user_id){
-            this.app.showAlert('不能与自己交易！')
+        if(this.app.accountInfo.data.has_account == 0){
+            this.app.showAlert('请先到收付款账号界面添加收付款方式！')
         }else{
-            this.app.showWriteGoldAlert(this.data);
+            if(this.data.user_id == this.app.UrlData.user_id){
+                this.app.showAlert('不能与自己交易！')
+            }else{
+                this.app.showWriteGoldAlert(this.data);
+            }
         }
+
 
     }
     // update (dt) {}
