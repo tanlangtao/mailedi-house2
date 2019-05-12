@@ -42,6 +42,13 @@ export default class NewClass extends cc.Component {
     }
     // LIFE-CYCLE CALLBACKS:
 
+    changeContent(data){
+        this.accountInput.string = data.account_card;
+        this.nameInput.string = data.account_name;
+        this.firstNameInput.string = data.account_surname;
+        this.lastNameInput.string = data.account_first_name;
+    }
+
     onLoad () {
         this.app = cc.find('Canvas').getComponent('Canvas');
         this.app.getPublicInput(this.firstNameInput,2);

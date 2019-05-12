@@ -4832,7 +4832,9 @@
       "__id__": 1
     },
     "_enabled": true,
-    "GiveUserAlert": null,
+    "GiveUserAlert": {
+      "__uuid__": "ae12b42b-b7d3-48fd-84f3-aec5f76c2182"
+    },
     "goldLabel": {
       "__id__": 42
     },

@@ -40,13 +40,18 @@ export default class NewClass extends cc.Component {
             this.app.showAlipayAccountAlert({
                 text:'修改支付宝',
                 action:'edit',
-                itemId:this.results.id
-            });
+                itemId:this.results.id,
+                //修改界面初始数据
+                changeData:JSON.parse(this.results.info),
+
+            })
         }else if(this.type == '银行卡'){
             this.app.showBankAccountAlert({
                 text:'修改银行卡',
                 action:'edit',
-                itemId:this.results.id
+                itemId:this.results.id,
+                //修改界面初始数据
+                changeData:JSON.parse(this.results.info)
             })
         }
     }

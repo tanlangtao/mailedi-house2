@@ -52,7 +52,9 @@ export default class NewClass extends cc.Component {
             method:'GET',
         }).then((data)=>data.json()).then((data)=>{
             if(data.status == 0){
-                // type = 1,
+                // type = 1,显示收付款信息
+                //type =2 ,显示出售
+                // type =6 ,确认赠送
                 if(this.type == 1){
                     var self = this;
                     var timer = setTimeout(()=>{
@@ -65,6 +67,9 @@ export default class NewClass extends cc.Component {
                         self.app.showSellAlert()
                         clearTimeout(timer);
                     },400)
+                }else if(this.type == 6){
+                    var give = cc.find('Canvas/content/Give').getComponent('Give');
+                    give.fetchGive();
                 }
 
             }else{

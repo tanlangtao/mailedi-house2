@@ -287,21 +287,30 @@ export default class NewClass extends cc.Component {
     public showAlipayAccountAlert(data){
         var node = cc.instantiate(this.AlipayAccountAlert);
         this.node.addChild(node);
-        node.getComponent('AlipayAccountAlert').init({
+        let AlipayAccountAlert = node.getComponent('AlipayAccountAlert');
+        AlipayAccountAlert.init({
             text:data.text,
             action:data.action,
             itemId:data.itemId
-        })
+        });
+        if(data.changeData){
+            AlipayAccountAlert.changeContent(data.changeData);
+        }
+
     }
     // 添加银行卡类型弹窗
     public showBankAccountAlert(data){
         var node = cc.instantiate(this.BankAccountAlert);
         this.node.addChild(node);
-        node.getComponent('BankAccountAlert').init({
+        let BankAccountAlert = node.getComponent('BankAccountAlert')
+        BankAccountAlert.init({
             text:data.text,
             action:data.action,
             itemId:data.itemId
         })
+        if(data.changeData){
+            BankAccountAlert.changeContent(data.changeData);
+        }
     }
     //删账号弹窗
     public showDeleteAccountAlert(data){
@@ -320,4 +329,5 @@ export default class NewClass extends cc.Component {
         this.node.addChild(node);
         node.getComponent('CancleAlert').init(data)
     }
+
 }

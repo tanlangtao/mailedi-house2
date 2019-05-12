@@ -161,6 +161,8 @@ export default class NewClass extends cc.Component {
         let gameGold = Number(this.app.game_gold);
         if(this.amountInput.string == ''||this.priceInput.string == ''||this.sillInput.string ==''){
             this.app.showAlert('上架信息不能为空！');
+        }else if(amount < sill ){
+            this.app.showAlert('出售金币不得小于最小交易额！');
         }else if(this.Info.length == 0){
             this.app.showAlert('请至少选择一种收款方式！');
         }else if(amount > gameGold){

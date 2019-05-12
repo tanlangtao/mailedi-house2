@@ -110,7 +110,7 @@ export default class NewClass extends cc.Component {
                 // 刷新app数据
                 this.app.fetchIndex();
 
-                this.app.showAlert('操作成功,请移至IM交易！')
+                this.app.showAlert('操作成功,请移至聊天中心交易！')
             }else{
                 this.app.showAlert(data.msg)
             }

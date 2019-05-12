@@ -60,13 +60,17 @@ export default class NewClass extends cc.Component {
             this.app.showAlipayAccountAlert({
                 text:'添加支付宝',
                 action:'add',
-                itemId:''
+                itemId:'',
+                //修改界面初始数据
+                changeData:false
             });
         }else if(this.current == 1){
             this.app.showBankAccountAlert({
                 text:'添加银行卡',
                 action:'add',
-                itemId:''
+                itemId:'',
+                //修改界面初始数据
+                changeData:false
             })
         }
         this.node.destroy();

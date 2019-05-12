@@ -62,7 +62,12 @@ export default class NewClass extends cc.Component {
     }
 
     addClick(){
-        this.app.showAddTypeAlert()
+        if(this.app.accountInfo.data.list.length >=8){
+            this.app.showAlert('收付款账户已达上限，请选择修改或删除！')
+        }else{
+            this.app.showAddTypeAlert()
+        }
+
     }
     // update (dt) {}
 }

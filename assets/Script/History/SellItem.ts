@@ -62,7 +62,7 @@ export default class NewClass extends cc.Component {
         // 兑换单价
         this.exchange_priceLabel.string = this.app.config.toDecimal(data.exchange_price);
         //最低兑换数量
-        this.min_goldLabel.string = `${parseInt(data.exchange_price)}`;
+        this.min_goldLabel.string = `${parseInt(data.min_gold)}`;
         // 兑换方式
         let pay_account = JSON.parse(data.pay_account);
         pay_account.forEach((item,index)=>{
