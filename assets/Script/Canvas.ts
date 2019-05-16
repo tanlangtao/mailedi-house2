@@ -93,14 +93,13 @@ export default class NewClass extends cc.Component {
         this.UrlData =  this.config.getUrlData();
         this.token = this.config.token;
         this.Client = new ClientMessage();
-        this.UrlData.host = 'http://new.recharge.0717996.com';
         this.fetchIndex();
     }
 
     start(){
         this.Client.send('__done',{},()=>{})
     }
-
+    // 加载支付宝图标
     public loadIcon(url,parent){
         var node = new cc.Node('Sprite');
 
@@ -113,10 +112,16 @@ export default class NewClass extends cc.Component {
             parent.addChild(node);
         })
     }
+    //更换字体
+    public loadFont(url,parent){
+        cc.loader.loadRes(url,cc.SpriteFrame,(err, spriteFrame)=>{
+            parent.getComponent(cc.Sprite).spriteFrame = spriteFrame;
+        })
+    }
 
     public fetchIndex(){
         this.idx = this.idx +1;
-        let url = `${this.UrlData.host}/api/with_draw/index?user_id=${this.UrlData.user_id}&token=${this.token}`;
+        let url = `${this.UrlData.host}/api/give/index?user_id=${this.UrlData.user_id}&token=${this.token}`;
         fetch(url,{
             method:'get'
         }).then((data)=>data.json()).then((data)=>{
@@ -184,6 +189,9 @@ export default class NewClass extends cc.Component {
                 //验证input,可以输入两位小数
                 let reg = /^\d{0,8}\.{0,1}(\d{0,2})?$/;
                 input.string = !reg.test(e.string) ? '' :e.string ;
+            }else if(type == 4){
+                //验证input,密码
+                input.string = e.string.replace(/[^\w\.\/]/ig,'');
             }
 
             PublicInputAlert.getComponent('PublicInputAlert').init({

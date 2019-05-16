@@ -97,7 +97,7 @@ export default class Config extends cc.Component {
         var h = date.getHours()  > 9 ? date.getHours() : `0${date.getHours()}`;
         var minute = date.getMinutes()  > 9 ? date.getMinutes() : `0${date.getMinutes()}`;
         var s = date.getSeconds()  > 9 ? date.getSeconds(): `0${date.getSeconds()}`;
-        var newDate =  m + "-" + d + " " + h + ":" + minute + ":" + s;
+        var newDate =  m + "-" + d + " " + h + ":" + minute ;
         return newDate;
     }
     //时间戳转换
@@ -106,7 +106,7 @@ export default class Config extends cc.Component {
         var h = Math.floor(timer/60/60) > 9 ? Math.floor(timer/60/60) : `0${Math.floor(timer/60/60)}`;
         var minute = Math.floor(timer/60%60) > 9 ? Math.floor(timer/60%60): `0${Math.floor(timer/60%60)}`;
         var s = timer%60 > 9 ? timer%60 : `0${timer%60}`;
-        var newDate =  h + "时" + minute + "分" + s +'秒';
+        var newDate =  h + ":" + minute + ":" + s ;
         return newDate;
     }
 

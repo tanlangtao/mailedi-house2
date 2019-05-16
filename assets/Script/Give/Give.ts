@@ -28,8 +28,8 @@ export default class NewClass extends cc.Component {
     @property(cc.Label)
     passworldLabel: cc.Label = null;
 
-    @property(cc.Label)
-    btn1: cc.Label = null;
+    @property(cc.Node)
+    btnSprite : cc.Node = null;
 
     @property
     public data : any = {};
@@ -55,7 +55,7 @@ export default class NewClass extends cc.Component {
 
     public fetchIndex(){
         this.idx = this.idx +1;
-        var url = `${this.app.UrlData.host}/api/with_draw/index?user_id=${this.app.UrlData.user_id}&token=${this.app.token}`;
+        var url = `${this.app.UrlData.host}/api/give/index?user_id=${this.app.UrlData.user_id}&token=${this.app.token}`;
         fetch(url,{
             method:'get'
         }).then((data)=>data.json()).then((data)=>{
@@ -80,11 +80,10 @@ export default class NewClass extends cc.Component {
 
     init(){
         var data = this.data.data;
-        let given = data.withDraw_info.given;
         this.goldLabel.string = this.app.config.toDecimal(data.game_gold);
-        this.czArea.string = `赠送范围:(${given.min_amount} - ${given.max_amount})`;
+        this.czArea.string = `赠送范围:(${data.min_amount} - ${data.max_amount})`;
         this.passworldLabel.string = data.is_password == 1 ? '已设置' : '未设置';
-        this.btn1.string = data.is_password == 1 ? '去修改' : '去设置';
+        data.is_password == 1 ? '' : this.app.loadFont('/quzz',this.btnSprite);
     }
 
     showMainClick(){

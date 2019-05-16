@@ -53,14 +53,14 @@ export default class NewClass extends cc.Component {
         this.order_idLabel.string = data.order_id.slice(-6);
         //交易ID，显示对方的ID;
         this.user_idLabel.string = data.user_id == this.app.UrlData.user_id ? data.replace_id:data.user_id;
-        this.goldLabel.string = this.app.config.toDecimal(data.gold);
-        this.arrival_amountLabel.string = this.app.config.toDecimal(data.arrival_amount);
-        this.created_atLabel.string = this.app.config.getTime(data.created_at);
+        this.goldLabel.string = data.gold ? this.app.config.toDecimal(data.gold) : '0';
+        this.arrival_amountLabel.string = data.arrival_amount ? this.app.config.toDecimal(data.arrival_amount) : '0';
+        this.created_atLabel.string = data.created_at ? this.app.config.getTime(data.created_at) : '0';
         this.arrival_atLabel.string =data.arrival_at == 0 ? '无' : this.app.config.getTime(data.arrival_at);
         this.statusLabel.string = data.status == 1 ? "未支付"
             :(data.status == 2 ? '已过期'
                 :(data.status == 4 ? '已撤销'
-                    :(data.status == 5 ?'已支付' :(data.status == 6 ? "'已完成'" :'无效订单')))) ;
+                    :(data.status == 5 ?'已支付' :(data.status == 6 ? "已完成" :'无效订单')))) ;
 
     }
 }

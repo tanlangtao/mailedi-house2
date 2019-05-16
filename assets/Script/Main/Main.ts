@@ -28,7 +28,6 @@ export default class NewClass extends cc.Component {
     @property
     public results = null;
     public page = 1;
-    public isReceive = false;
     protected onLoad(): void {
         this.app = cc.find('Canvas').getComponent('Canvas');
         this.fetchIndex();
@@ -87,22 +86,16 @@ export default class NewClass extends cc.Component {
 
 
     pageUp(){
-        if(this.isReceive){
-            if(this.page > 1){
-                this.page = this.page - 1;
-                this.updataList();
-                this.isReceive = false;
-            }
+        if(this.page > 1){
+            this.page = this.page - 1;
+            this.updataList();
         }
     }
 
     pageDown(){
-        if(this.isReceive){
-            if(this.page < this.results.data.total_page){
-                this.page = this.page + 1;
-                this.updataList();
-                this.isReceive = false;
-            }
+        if(this.page < this.results.data.total_page){
+            this.page = this.page + 1;
+            this.updataList();
         }
     }
 }

@@ -15,7 +15,6 @@
     "DragonBones",
     "RichText",
     "ScrollBar",
-    "ScrollView",
     "PageView",
     "PageViewIndicator",
     "Slider",
@@ -53,5 +52,6 @@
     "width": 960
   },
   "use-customize-simulator": true,
-  "use-project-simulator-setting": false
+  "use-project-simulator-setting": false,
+  "start-scene": "current"
 }

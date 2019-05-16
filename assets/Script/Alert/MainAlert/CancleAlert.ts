@@ -34,7 +34,7 @@ export default class NewClass extends cc.Component {
 
     onClick(){
         this.fetchCancle();
-        this.node.destroy();
+        this.node.removeFromParent();
     }
 
     fetchCancle(){

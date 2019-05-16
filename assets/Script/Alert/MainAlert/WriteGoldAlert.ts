@@ -26,7 +26,6 @@ export default class NewClass extends cc.Component {
 
     public init(data){
         this.data = data;
-        console.log(data)
     }
     // LIFE-CYCLE CALLBACKS:
 
@@ -38,6 +37,8 @@ export default class NewClass extends cc.Component {
     onClick(){
         if(Number(this.data.min_gold) >Number(this.amountInput.string)){
             this.app.showAlert('小于最低交易额!')
+        }else if(Number(this.data.gold) < Number(this.amountInput.string)){
+            this.app.showAlert('当前上架金币不足！')
         }else if( this.amountInput.string == ''){
             this.app.showAlert('输入不能为空!')
         }else{
@@ -64,9 +65,8 @@ export default class NewClass extends cc.Component {
         })
     }
     fetchVeify(){
-        let IMserver = CC_BUILD ?  "http://47.75.133.82:9090" : "http://10.63.60.112:9090" ;
-
-        let url = `${IMserver}/verify`;
+        let imHost = this.app.UrlData.imHost;
+        let url = `${imHost}/verify`;
         this.FormData= new FormData();
         this.FormData.append('user_id',this.app.UrlData.user_id);
         fetch(url,{
@@ -83,9 +83,8 @@ export default class NewClass extends cc.Component {
 
     }
     fetchBindAccountPay(){
-        let IMserver = CC_BUILD ?  "http://47.75.133.82:9090" : "http://10.63.60.112:9090" ;
-
-        let url = `${IMserver}/transaction`;
+        let imHost = this.app.UrlData.imHost;
+        let url = `${imHost}/transaction`;
 
         let amount = Number(this.amountInput.string)*Number(this.data.exchange_price);
         this.FormData= new FormData();
@@ -95,7 +94,7 @@ export default class NewClass extends cc.Component {
         this.FormData.append('replace_name',this.data.user_name);
         this.FormData.append('gold',this.amountInput.string);
         this.FormData.append('amount',`${amount}`);
-        this.FormData.append('sell_id',this.data.sell_id);
+        this.FormData.append('sell_id',this.data.id);
         this.FormData.append('exchange_price',this.data.exchange_price);
         this.FormData.append('client', this.app.UrlData.client)
         this.FormData.append('proxy_user_id', this.app.UrlData.proxy_user_id)

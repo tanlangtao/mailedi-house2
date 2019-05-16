@@ -32,6 +32,7 @@ export default class NewClass extends cc.Component {
     }
 
     onClick(){
+        console.log(this.index)
         this.parentComponent.current = this.index;
         this.parentComponent.showSelect = false;
         this.parentComponent.selectContent.removeAllChildren();

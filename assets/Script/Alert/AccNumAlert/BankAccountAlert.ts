@@ -15,9 +15,6 @@ export default class NewClass extends cc.Component {
     @property(cc.Prefab)
     BankSelectItem : cc.Prefab = null;
 
-    @property(cc.Label)
-    label: cc.Label = null;
-
     @property(cc.EditBox)
     nameInput: cc.EditBox = null;
 
@@ -33,6 +30,9 @@ export default class NewClass extends cc.Component {
     @property(cc.Node)
     selectContent: cc.Node = null;
 
+    @property(cc.Node)
+    titleSprite : cc.Node = null;
+
     @property()
     FormData = new FormData();
     showSelect = false;
@@ -41,7 +41,6 @@ export default class NewClass extends cc.Component {
     itemId = null;
 
     public init(data){
-        this.label.string = data.text;
         this.action = data.action;
         this.itemId = data.itemId;
     }
@@ -51,6 +50,7 @@ export default class NewClass extends cc.Component {
         this.nameInput.string = data.card_name;
         this.selectLabel.string = data.bank_name;
         this.bankNameInput.string = data.branch_name;
+        this.app.loadFont('/xiugaiyinhng',this.titleSprite);
     }
     onLoad () {
         this.app = cc.find('Canvas').getComponent('Canvas');

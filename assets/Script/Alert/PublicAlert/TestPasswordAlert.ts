@@ -27,7 +27,7 @@ export default class NewClass extends cc.Component {
 
     onLoad () {
         this.app = cc.find('Canvas').getComponent('Canvas');
-        this.app.getPublicInput(this.passwordInput,1);
+        this.app.getPublicInput(this.passwordInput,4);
     }
 
     start () {

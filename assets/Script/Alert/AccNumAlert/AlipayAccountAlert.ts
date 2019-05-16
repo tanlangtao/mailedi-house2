@@ -14,9 +14,6 @@ const {ccclass, property} = cc._decorator;
 @ccclass
 export default class NewClass extends cc.Component {
 
-    @property(cc.Label)
-    label: cc.Label = null;
-
     @property(cc.EditBox)
     firstNameInput: cc.EditBox = null;
 
@@ -29,6 +26,9 @@ export default class NewClass extends cc.Component {
     @property(cc.EditBox)
     accountInput: cc.EditBox = null;
 
+    @property(cc.Node)
+    titleSprite : cc.Node = null;
+
     @property()
     FormData = new FormData();
     public app = null;
@@ -36,7 +36,6 @@ export default class NewClass extends cc.Component {
     public  itemId = null;
 
     public init(data){
-        this.label.string = data.text;
         this.action = data.action;
         this.itemId = data.itemId;
     }
@@ -47,6 +46,7 @@ export default class NewClass extends cc.Component {
         this.nameInput.string = data.account_name;
         this.firstNameInput.string = data.account_surname;
         this.lastNameInput.string = data.account_first_name;
+        this.app.loadFont('/xiugaizfb',this.titleSprite);
     }
 
     onLoad () {

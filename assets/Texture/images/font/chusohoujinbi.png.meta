@@ -1,0 +1,31 @@
+{
+  "ver": "2.2.0",
+  "uuid": "6caec3de-c221-449e-bdf4-41844bd1c10d",
+  "type": "sprite",
+  "wrapMode": "clamp",
+  "filterMode": "bilinear",
+  "premultiplyAlpha": false,
+  "subMetas": {
+    "chusohoujinbi": {
+      "ver": "1.0.3",
+      "uuid": "5209395b-a082-48ea-90da-cbbdea165ef9",
+      "rawTextureUuid": "6caec3de-c221-449e-bdf4-41844bd1c10d",
+      "trimType": "auto",
+      "trimThreshold": 1,
+      "rotated": false,
+      "offsetX": -0.5,
+      "offsetY": 0.5,
+      "trimX": 2,
+      "trimY": 2,
+      "width": 158,
+      "height": 39,
+      "rawWidth": 163,
+      "rawHeight": 44,
+      "borderTop": 0,
+      "borderBottom": 0,
+      "borderLeft": 0,
+      "borderRight": 0,
+      "subMetas": {}
+    }
+  }
+}
