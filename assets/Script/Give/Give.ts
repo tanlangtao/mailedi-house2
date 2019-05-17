@@ -175,7 +175,7 @@ export default class NewClass extends cc.Component {
 
     onClick(){
         var amount = Number(this.amountInput.string);
-        let given = this.data.data.withDraw_info.given;
+        let given = this.data.data;
         var minAmount = Number(given.min_amount);
         var maxAmount = Number(given.max_amount);
         if(this.data.data.is_password == 0){

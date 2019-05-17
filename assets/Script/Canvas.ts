@@ -94,8 +94,8 @@ export default class NewClass extends cc.Component {
         this.token = this.config.token;
         this.Client = new ClientMessage();
         this.fetchIndex();
-    }
 
+    }
     start(){
         this.Client.send('__done',{},()=>{})
     }
@@ -176,7 +176,7 @@ export default class NewClass extends cc.Component {
                 text: e.string,
                 input: input
             })
-        })
+        });
         input.node.on('text-changed', (e) => {
             if(type == 1){
                 //验证input type = 1 不能以0开头的整数
@@ -187,7 +187,7 @@ export default class NewClass extends cc.Component {
                 input.string = e.string.replace(patrn,'');
             }else if(type == 3){
                 //验证input,可以输入两位小数
-                let reg = /^\d{0,8}\.{0,1}(\d{0,2})?$/;
+                let reg = /^\d{0,8}\.{0,1}(\d{0,3})?$/;
                 input.string = !reg.test(e.string) ? '' :e.string ;
             }else if(type == 4){
                 //验证input,密码
@@ -198,6 +198,10 @@ export default class NewClass extends cc.Component {
                 text: e.string,
                 input: input
             })
+        })
+        input.node.on('editing-return', (e) => {
+
+            PublicInputAlert.getComponent('PublicInputAlert').readyClick()
         })
     }
     // 点击返回大厅

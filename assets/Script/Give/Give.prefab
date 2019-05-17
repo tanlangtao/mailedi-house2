@@ -708,7 +708,7 @@
     "_contentSize": {
       "__type__": "cc.Size",
       "width": 200,
-      "height": 30
+      "height": 60
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -718,7 +718,7 @@
     "_position": {
       "__type__": "cc.Vec3",
       "x": -10.4,
-      "y": -6.1,
+      "y": 0,
       "z": 0
     },
     "_scale": {
@@ -770,7 +770,7 @@
     "_contentSize": {
       "__type__": "cc.Size",
       "width": 200,
-      "height": 30
+      "height": 60
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -868,8 +868,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 198,
-      "height": 30
+      "width": 200,
+      "height": 60
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -878,8 +878,8 @@
     },
     "_position": {
       "__type__": "cc.Vec3",
-      "x": -98,
-      "y": 15,
+      "x": -100,
+      "y": 30,
       "z": 0
     },
     "_scale": {
@@ -966,8 +966,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 198,
-      "height": 30
+      "width": 200,
+      "height": 60
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -976,8 +976,8 @@
     },
     "_position": {
       "__type__": "cc.Vec3",
-      "x": -98,
-      "y": 15,
+      "x": -100,
+      "y": 30,
       "z": 0
     },
     "_scale": {
@@ -1052,9 +1052,9 @@
     "editingDidEnded": [],
     "editingReturn": [],
     "_N$backgroundImage": null,
-    "_N$returnType": 0,
+    "_N$returnType": 1,
     "_N$inputFlag": 5,
-    "_N$inputMode": 0,
+    "_N$inputMode": 3,
     "_N$fontSize": 20,
     "_N$lineHeight": 30,
     "_N$fontColor": {
@@ -1615,7 +1615,7 @@
     "_contentSize": {
       "__type__": "cc.Size",
       "width": 200,
-      "height": 30
+      "height": 60
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -1625,7 +1625,7 @@
     "_position": {
       "__type__": "cc.Vec3",
       "x": -10.4,
-      "y": -6.1,
+      "y": 0,
       "z": 0
     },
     "_scale": {
@@ -1677,7 +1677,7 @@
     "_contentSize": {
       "__type__": "cc.Size",
       "width": 200,
-      "height": 30
+      "height": 60
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -1775,8 +1775,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 198,
-      "height": 30
+      "width": 200,
+      "height": 60
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -1785,8 +1785,8 @@
     },
     "_position": {
       "__type__": "cc.Vec3",
-      "x": -98,
-      "y": 15,
+      "x": -100,
+      "y": 30,
       "z": 0
     },
     "_scale": {
@@ -1873,8 +1873,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 198,
-      "height": 30
+      "width": 200,
+      "height": 60
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -1883,8 +1883,8 @@
     },
     "_position": {
       "__type__": "cc.Vec3",
-      "x": -98,
-      "y": 15,
+      "x": -100,
+      "y": 30,
       "z": 0
     },
     "_scale": {
@@ -1959,9 +1959,9 @@
     "editingDidEnded": [],
     "editingReturn": [],
     "_N$backgroundImage": null,
-    "_N$returnType": 0,
+    "_N$returnType": 1,
     "_N$inputFlag": 5,
-    "_N$inputMode": 0,
+    "_N$inputMode": 3,
     "_N$fontSize": 20,
     "_N$lineHeight": 30,
     "_N$fontColor": {

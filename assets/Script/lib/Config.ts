@@ -89,6 +89,25 @@ export default class Config extends cc.Component {
         }
         return s_x;
     }
+    //保留三位小数
+    public toDecimal3(num) {
+        var result = parseFloat(num);
+        if (isNaN(result)) {
+            alert('传递参数错误，请检查！');
+            return false;
+        }
+        result = Math.round(num * 100) / 100;
+        var s_x = result.toString();
+        var pos_decimal = s_x.indexOf('.');
+        if (pos_decimal < 0) {
+            pos_decimal = s_x.length;
+            s_x += '.';
+        }
+        while (s_x.length <= pos_decimal + 3) {
+            s_x += '0';
+        }
+        return s_x;
+    }
     //时间戳转换
     public getTime(time){
         var date = new Date(time * 1000);    //根据时间戳生成的时间对象

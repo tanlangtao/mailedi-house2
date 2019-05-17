@@ -1292,7 +1292,7 @@
     "_contentSize": {
       "__type__": "cc.Size",
       "width": 233,
-      "height": 30
+      "height": 60
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -1302,7 +1302,7 @@
     "_position": {
       "__type__": "cc.Vec3",
       "x": -14,
-      "y": -6,
+      "y": 0,
       "z": 0
     },
     "_scale": {
@@ -1354,7 +1354,7 @@
     "_contentSize": {
       "__type__": "cc.Size",
       "width": 233,
-      "height": 30
+      "height": 60
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -1453,7 +1453,7 @@
     "_contentSize": {
       "__type__": "cc.Size",
       "width": 231,
-      "height": 30
+      "height": 60
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -1463,7 +1463,7 @@
     "_position": {
       "__type__": "cc.Vec3",
       "x": -114.5,
-      "y": 15,
+      "y": 30,
       "z": 0
     },
     "_scale": {
@@ -1499,13 +1499,13 @@
     "_N$string": "",
     "_fontSize": 20,
     "_lineHeight": 30,
-    "_enableWrapText": true,
+    "_enableWrapText": false,
     "_N$file": null,
     "_isSystemFontUsed": true,
     "_spacingX": 0,
     "_batchAsBitmap": false,
     "_N$horizontalAlign": 0,
-    "_N$verticalAlign": 0,
+    "_N$verticalAlign": 1,
     "_N$fontFamily": "Arial",
     "_N$overflow": 1,
     "_N$cacheMode": 0,
@@ -1551,7 +1551,7 @@
     "_contentSize": {
       "__type__": "cc.Size",
       "width": 231,
-      "height": 30
+      "height": 60
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -1561,7 +1561,7 @@
     "_position": {
       "__type__": "cc.Vec3",
       "x": -114.5,
-      "y": 15,
+      "y": 30,
       "z": 0
     },
     "_scale": {
@@ -1596,14 +1596,14 @@
     "_string": "请输入姓名",
     "_N$string": "请输入姓名",
     "_fontSize": 20,
-    "_lineHeight": 30,
-    "_enableWrapText": true,
+    "_lineHeight": 60,
+    "_enableWrapText": false,
     "_N$file": null,
     "_isSystemFontUsed": true,
     "_spacingX": 0,
     "_batchAsBitmap": false,
     "_N$horizontalAlign": 0,
-    "_N$verticalAlign": 0,
+    "_N$verticalAlign": 1,
     "_N$fontFamily": "Arial",
     "_N$overflow": 1,
     "_N$cacheMode": 0,
@@ -1636,9 +1636,9 @@
     "editingDidEnded": [],
     "editingReturn": [],
     "_N$backgroundImage": null,
-    "_N$returnType": 0,
+    "_N$returnType": 1,
     "_N$inputFlag": 5,
-    "_N$inputMode": 0,
+    "_N$inputMode": 6,
     "_N$fontSize": 20,
     "_N$lineHeight": 30,
     "_N$fontColor": {
@@ -2101,7 +2101,7 @@
     "_contentSize": {
       "__type__": "cc.Size",
       "width": 237.6,
-      "height": 30
+      "height": 60
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -2111,7 +2111,7 @@
     "_position": {
       "__type__": "cc.Vec3",
       "x": -14,
-      "y": -6,
+      "y": 0,
       "z": 0
     },
     "_scale": {
@@ -2163,7 +2163,7 @@
     "_contentSize": {
       "__type__": "cc.Size",
       "width": 237.6,
-      "height": 30
+      "height": 60
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -2262,7 +2262,7 @@
     "_contentSize": {
       "__type__": "cc.Size",
       "width": 235.6,
-      "height": 30
+      "height": 60
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -2272,7 +2272,7 @@
     "_position": {
       "__type__": "cc.Vec3",
       "x": -116.8,
-      "y": 15,
+      "y": 30,
       "z": 0
     },
     "_scale": {
@@ -2308,13 +2308,13 @@
     "_N$string": "",
     "_fontSize": 20,
     "_lineHeight": 30,
-    "_enableWrapText": true,
+    "_enableWrapText": false,
     "_N$file": null,
     "_isSystemFontUsed": true,
     "_spacingX": 0,
     "_batchAsBitmap": false,
     "_N$horizontalAlign": 0,
-    "_N$verticalAlign": 0,
+    "_N$verticalAlign": 1,
     "_N$fontFamily": "Arial",
     "_N$overflow": 1,
     "_N$cacheMode": 0,
@@ -2360,7 +2360,7 @@
     "_contentSize": {
       "__type__": "cc.Size",
       "width": 235.6,
-      "height": 30
+      "height": 60
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -2370,7 +2370,7 @@
     "_position": {
       "__type__": "cc.Vec3",
       "x": -116.8,
-      "y": 15,
+      "y": 30,
       "z": 0
     },
     "_scale": {
@@ -2405,14 +2405,14 @@
     "_string": "请输入卡号",
     "_N$string": "请输入卡号",
     "_fontSize": 20,
-    "_lineHeight": 30,
-    "_enableWrapText": true,
+    "_lineHeight": 60,
+    "_enableWrapText": false,
     "_N$file": null,
     "_isSystemFontUsed": true,
     "_spacingX": 0,
     "_batchAsBitmap": false,
     "_N$horizontalAlign": 0,
-    "_N$verticalAlign": 0,
+    "_N$verticalAlign": 1,
     "_N$fontFamily": "Arial",
     "_N$overflow": 1,
     "_N$cacheMode": 0,
@@ -2445,9 +2445,9 @@
     "editingDidEnded": [],
     "editingReturn": [],
     "_N$backgroundImage": null,
-    "_N$returnType": 0,
+    "_N$returnType": 1,
     "_N$inputFlag": 5,
-    "_N$inputMode": 0,
+    "_N$inputMode": 3,
     "_N$fontSize": 20,
     "_N$lineHeight": 30,
     "_N$fontColor": {
@@ -3481,7 +3481,7 @@
     "_contentSize": {
       "__type__": "cc.Size",
       "width": 237.6,
-      "height": 30
+      "height": 60
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -3491,7 +3491,7 @@
     "_position": {
       "__type__": "cc.Vec3",
       "x": -14,
-      "y": -6,
+      "y": 0,
       "z": 0
     },
     "_scale": {
@@ -3543,7 +3543,7 @@
     "_contentSize": {
       "__type__": "cc.Size",
       "width": 237.6,
-      "height": 30
+      "height": 60
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -3642,7 +3642,7 @@
     "_contentSize": {
       "__type__": "cc.Size",
       "width": 235.6,
-      "height": 30
+      "height": 60
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -3652,7 +3652,7 @@
     "_position": {
       "__type__": "cc.Vec3",
       "x": -116.8,
-      "y": 15,
+      "y": 30,
       "z": 0
     },
     "_scale": {
@@ -3688,13 +3688,13 @@
     "_N$string": "",
     "_fontSize": 20,
     "_lineHeight": 30,
-    "_enableWrapText": true,
+    "_enableWrapText": false,
     "_N$file": null,
     "_isSystemFontUsed": true,
     "_spacingX": 0,
     "_batchAsBitmap": false,
     "_N$horizontalAlign": 0,
-    "_N$verticalAlign": 0,
+    "_N$verticalAlign": 1,
     "_N$fontFamily": "Arial",
     "_N$overflow": 1,
     "_N$cacheMode": 0,
@@ -3740,7 +3740,7 @@
     "_contentSize": {
       "__type__": "cc.Size",
       "width": 235.6,
-      "height": 30
+      "height": 60
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -3750,7 +3750,7 @@
     "_position": {
       "__type__": "cc.Vec3",
       "x": -116.8,
-      "y": 15,
+      "y": 30,
       "z": 0
     },
     "_scale": {
@@ -3785,14 +3785,14 @@
     "_string": "请输入开户行",
     "_N$string": "请输入开户行",
     "_fontSize": 20,
-    "_lineHeight": 30,
-    "_enableWrapText": true,
+    "_lineHeight": 60,
+    "_enableWrapText": false,
     "_N$file": null,
     "_isSystemFontUsed": true,
     "_spacingX": 0,
     "_batchAsBitmap": false,
     "_N$horizontalAlign": 0,
-    "_N$verticalAlign": 0,
+    "_N$verticalAlign": 1,
     "_N$fontFamily": "Arial",
     "_N$overflow": 1,
     "_N$cacheMode": 0,
@@ -3825,9 +3825,9 @@
     "editingDidEnded": [],
     "editingReturn": [],
     "_N$backgroundImage": null,
-    "_N$returnType": 0,
+    "_N$returnType": 1,
     "_N$inputFlag": 5,
-    "_N$inputMode": 0,
+    "_N$inputMode": 6,
     "_N$fontSize": 20,
     "_N$lineHeight": 30,
     "_N$fontColor": {

@@ -20,8 +20,8 @@ export default class NewClass extends cc.Component {
     @property(cc.EditBox)
     lastNameInput: cc.EditBox = null;
 
-    @property(cc.EditBox)
-    nameInput: cc.EditBox = null;
+    @property(cc.Label)
+    nameLabel: cc.Label = null;
 
     @property(cc.EditBox)
     accountInput: cc.EditBox = null;
@@ -43,7 +43,7 @@ export default class NewClass extends cc.Component {
 
     changeContent(data){
         this.accountInput.string = data.account_card;
-        this.nameInput.string = data.account_name;
+        this.nameLabel.string = data.account_name;
         this.firstNameInput.string = data.account_surname;
         this.lastNameInput.string = data.account_first_name;
         this.app.loadFont('/xiugaizfb',this.titleSprite);
@@ -54,13 +54,17 @@ export default class NewClass extends cc.Component {
         this.app.getPublicInput(this.firstNameInput,2);
         this.app.getPublicInput(this.lastNameInput,2);
         this.app.getPublicInput(this.accountInput,1);
-        this.app.getPublicInput(this.nameInput,2);
+        this.firstNameInput.node.on('text-changed',()=>{
+            this.nameLabel.string = `${this.firstNameInput.string}${this.lastNameInput.string}`
+        })
+        this.lastNameInput.node.on('text-changed',()=>{
+            this.nameLabel.string = `${this.firstNameInput.string}${this.lastNameInput.string}`
+        })
     }
 
     onClick(){
 
         if( this.accountInput.string == ''
-            || this.nameInput.string == ''
             || this.firstNameInput.string == ''
             || this.lastNameInput.string == '' )
         {
@@ -79,7 +83,7 @@ export default class NewClass extends cc.Component {
             account_card:this.accountInput.string,
             account_surname:this.firstNameInput.string,
             account_first_name:this.lastNameInput.string,
-            account_name:this.nameInput.string,
+            account_name:this.nameLabel.string,
 
             pay_url:'',
         };
@@ -118,14 +122,12 @@ export default class NewClass extends cc.Component {
 
     deleteFirstName(){
         this.firstNameInput.string = '';
+        this.nameLabel.string = `${this.firstNameInput.string}${this.lastNameInput.string}`
     }
 
     deleteLastName(){
         this.lastNameInput.string = '';
-    }
-
-    deleteName(){
-        this.nameInput.string = '';
+        this.nameLabel.string = `${this.firstNameInput.string}${this.lastNameInput.string}`
     }
 
     deleteAccount(){

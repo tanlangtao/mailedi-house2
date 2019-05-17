@@ -37,7 +37,7 @@ export default class NewClass extends cc.Component {
     onClick(){
         if(Number(this.data.min_gold) >Number(this.amountInput.string)){
             this.app.showAlert('小于最低交易额!')
-        }else if(Number(this.data.gold) < Number(this.amountInput.string)){
+        }else if(Number(this.data.last_gold) < Number(this.amountInput.string)){
             this.app.showAlert('当前上架金币不足！')
         }else if( this.amountInput.string == ''){
             this.app.showAlert('输入不能为空!')
@@ -54,6 +54,7 @@ export default class NewClass extends cc.Component {
             if(data.status == 0){
                 //判断是否存在订单
                 if(data.data.is_exist == 0){
+                    console.log('111')
                     this.fetchVeify();
                 }else{
                     this.app.showCancleAlert(data.data);
@@ -85,15 +86,16 @@ export default class NewClass extends cc.Component {
     fetchBindAccountPay(){
         let imHost = this.app.UrlData.imHost;
         let url = `${imHost}/transaction`;
-
-        let amount = Number(this.amountInput.string)*Number(this.data.exchange_price);
+        //防止丢失精度
+        let scale =Number(this.data.exchange_price)*1000000;
+        let amount = Number(this.amountInput.string)*scale/1000000;
         this.FormData= new FormData();
         this.FormData.append('user_id',this.app.UrlData.user_id);
         this.FormData.append('user_name',decodeURI(this.app.UrlData.user_name));
         this.FormData.append('replace_id',this.data.user_id);
         this.FormData.append('replace_name',this.data.user_name);
         this.FormData.append('gold',this.amountInput.string);
-        this.FormData.append('amount',`${amount}`);
+        this.FormData.append('amount',`${amount/1000}`);
         this.FormData.append('sell_id',this.data.id);
         this.FormData.append('exchange_price',this.data.exchange_price);
         this.FormData.append('client', this.app.UrlData.client)
@@ -108,8 +110,13 @@ export default class NewClass extends cc.Component {
             if(data.code == 0){
                 // 刷新app数据
                 this.app.fetchIndex();
-
                 this.app.showAlert('操作成功,请移至聊天中心交易！')
+                // 唤起IM
+                let self = this;
+                let timer = setTimeout(()=>{
+                    self.app.Client.send('__onim',{})
+                    clearTimeout(timer);
+                },1500)
             }else{
                 this.app.showAlert(data.msg)
             }

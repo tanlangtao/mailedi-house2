@@ -46,7 +46,7 @@ export default class NewClass extends cc.Component {
         this.startTimeLabel.string = this.app.config.getTime(data.up_at);
         this.startGoldLabel.string = `${parseInt(data.gold)}`;
         this.remainderGoldLabel.string = `${parseInt(data.last_gold)}`;
-        this.priceLabel.string = this.app.config.toDecimal(data.exchange_price);
+        this.priceLabel.string = this.app.config.toDecimal3(data.exchange_price);
         this.sillLabel.string = `${parseInt(data.min_gold)}`;
         // 兑换方式
         let pay_account = JSON.parse(data.pay_account);
@@ -71,7 +71,6 @@ export default class NewClass extends cc.Component {
                 this.app.showWriteGoldAlert(this.data);
             }
         }
-
 
     }
     // update (dt) {}
