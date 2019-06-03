@@ -72,7 +72,6 @@ export default class NewClass extends cc.Component {
     }
 
     updataList(){
-        this.mainList.removeAllChildren();
         this.fetchIndex();
     }
 

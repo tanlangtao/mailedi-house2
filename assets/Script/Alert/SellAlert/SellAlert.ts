@@ -46,6 +46,17 @@ export default class NewClass extends cc.Component {
     @property(cc.Label)
     areaLabel3: cc.Label = null;
 
+    @property(cc.Label)
+    amountLabel: cc.Label = null;
+
+    @property(cc.Label)
+    priceLabel: cc.Label = null;
+
+    @property(cc.Label)
+    sillLabel: cc.Label = null;
+
+
+
     @property()
     FormData = new FormData();
     public accountInfo =  null;
@@ -63,8 +74,71 @@ export default class NewClass extends cc.Component {
         this.app.getPublicInput(this.priceInput,3);
         this.app.getPublicInput(this.sillInput,1);
         this.fetchIndex();
+
+        this.app.setComponent('alertLogin').setMethod('setAmount', (text) => this.setAmount(text));
+        this.app.setComponent('alertLogin').setMethod('setPrice', (text) => this.setPrice(text));
+        this.app.setComponent('alertLogin').setMethod('setSill', (text) => this.setSill(text));
+        //根据当前环境选择使用的输入组件
+        if(this.app.UrlData.client == 'ios'){
+            this.amountInput.node.active = false;
+            this.priceInput.node.active = false;
+            this.sillInput.node.active = false;
+
+            this.amountLabel.node.active = true;
+            this.priceLabel.node.active = true;
+            this.sillLabel.node.active = true;
+        }else{
+            this.amountInput.node.active = true;
+            this.priceInput.node.active = true;
+            this.sillInput.node.active = true;
+
+            this.amountLabel.node.active = false;
+            this.priceLabel.node.active = false;
+            this.sillLabel.node.active = false;
+        }
     }
 
+    setAmount(msg) {
+        let msg2 = this.app.labelType(msg,1);
+        this.amountLabel.string = msg2 || '输入出售金额';
+        this.setInputColor(msg2,this.amountLabel);
+    }
+
+    setPrice(msg) {
+        let msg2 = this.app.labelType(msg,3);
+        this.priceLabel.string = msg2 || '最多三位小数';
+        this.setInputColor(msg2,this.priceLabel);
+    }
+
+    setSill(msg) {
+        let msg2 = this.app.labelType(msg,1);
+        this.sillLabel.string = msg2 || '输入金额';
+        this.setInputColor(msg2,this.sillLabel);
+    }
+    setInputColor(msg,input){
+        let color1 = new cc.Color(255, 255, 255);
+        let color2 = new cc.Color(187, 187, 187);
+        //设置字的颜色
+        msg == '' ? input.node.color = color2:input.node.color = color1;
+    }
+    //Label点击回调
+    changeAmount(){
+        //此处使用RN 的input组件
+        this.app.Client.send('__oninput', { text: this.amountLabel.string == '输入出售金额' ? "" :this.amountLabel.string,
+            component: 'alertLogin', method: 'setAmount' })
+    }
+
+    changePrice(){
+        //此处使用RN 的input组件
+        this.app.Client.send('__oninput', { text: this.priceLabel.string == '最多三位小数' ? "" :this.priceLabel.string,
+            component: 'alertLogin', method: 'setPrice' })
+    }
+
+    changeSill(){
+        //此处使用RN 的input组件
+        this.app.Client.send('__oninput', { text: this.sillLabel.string == '输入金额' ? "" :this.sillLabel.string,
+            component: 'alertLogin', method: 'setSill' })
+    }
     public fetchIndex() {
         this.accountInfo = this.app.accountInfo;
         this.init();
@@ -149,33 +223,64 @@ export default class NewClass extends cc.Component {
     }
 
     onClick(){
-        let amount = Number(this.amountInput.string);
-        let price = Number(this.priceInput.string);
-        let sill = Number(this.sillInput.string);
-        let minAmount = Number(this.sell_gold.min_amount);
-        let maxAmount = Number(this.sell_gold.max_amount);
-        let minPrice = Number(this.sell_gold.min_exchange_price);
-        let maxPrice = Number(this.sell_gold.max_exchange_price);
-        let minSill = Number(this.sell_gold.min_exchange_gold);
-        //剩余金币
-        let gameGold = Number(this.app.game_gold);
-        if(this.amountInput.string == ''||this.priceInput.string == ''||this.sillInput.string ==''){
-            this.app.showAlert('上架信息不能为空！');
-        }else if(amount < sill ){
-            this.app.showAlert('出售金币不得小于最小交易额！');
-        }else if(this.Info.length == 0){
-            this.app.showAlert('请至少选择一种收款方式！');
-        }else if(amount > gameGold){
-            this.app.showAlert(`当前剩余金币${gameGold}！`);
-        }else if(amount > maxAmount || amount < minAmount){
-            this.app.showAlert('金币不符合范围');
-        }else if(price > maxPrice || price < minPrice){
-            this.app.showAlert('单价不符合范围');
-        }else if(sill < minSill){
-            this.app.showAlert('最低交易额不符合范围！');
+        if(this.app.UrlData.client=='ios'){
+            let amount = Number(this.amountLabel.string);
+            let price = Number(this.priceLabel.string);
+            let sill = Number(this.sillLabel.string);
+            let minAmount = Number(this.sell_gold.min_amount);
+            let maxAmount = Number(this.sell_gold.max_amount);
+            let minPrice = Number(this.sell_gold.min_exchange_price);
+            let maxPrice = Number(this.sell_gold.max_exchange_price);
+            let minSill = Number(this.sell_gold.min_exchange_gold);
+            //剩余金币
+            let gameGold = Number(this.app.game_gold);
+            if(this.amountLabel.string == '输入出售金额'||this.priceLabel.string == '最多三位小数'||this.sillLabel.string =='输入金额'){
+                this.app.showAlert('上架信息不能为空！');
+            }else if(amount < sill ){
+                this.app.showAlert('出售金币不得小于最小交易额！');
+            }else if(this.Info.length == 0){
+                this.app.showAlert('请至少选择一种收款方式！');
+            }else if(amount > gameGold){
+                this.app.showAlert(`当前剩余金币${gameGold}！`);
+            }else if(amount > maxAmount || amount < minAmount){
+                this.app.showAlert('金币不符合范围');
+            }else if(price > maxPrice || price < minPrice){
+                this.app.showAlert('单价不符合范围');
+            }else if(sill < minSill){
+                this.app.showAlert('最低交易额不符合范围！');
+            }else{
+                this.submitSellGoldInfo();
+                this.node.removeFromParent();
+            }
         }else{
-            this.submitSellGoldInfo();
-            this.node.removeFromParent();
+            let amount = Number(this.amountInput.string);
+            let price = Number(this.priceInput.string);
+            let sill = Number(this.sillInput.string);
+            let minAmount = Number(this.sell_gold.min_amount);
+            let maxAmount = Number(this.sell_gold.max_amount);
+            let minPrice = Number(this.sell_gold.min_exchange_price);
+            let maxPrice = Number(this.sell_gold.max_exchange_price);
+            let minSill = Number(this.sell_gold.min_exchange_gold);
+            //剩余金币
+            let gameGold = Number(this.app.game_gold);
+            if(this.amountInput.string == ''||this.priceInput.string == ''||this.sillInput.string ==''){
+                this.app.showAlert('上架信息不能为空！');
+            }else if(amount < sill ){
+                this.app.showAlert('出售金币不得小于最小交易额！');
+            }else if(this.Info.length == 0){
+                this.app.showAlert('请至少选择一种收款方式！');
+            }else if(amount > gameGold){
+                this.app.showAlert(`当前剩余金币${gameGold}！`);
+            }else if(amount > maxAmount || amount < minAmount){
+                this.app.showAlert('金币不符合范围');
+            }else if(price > maxPrice || price < minPrice){
+                this.app.showAlert('单价不符合范围');
+            }else if(sill < minSill){
+                this.app.showAlert('最低交易额不符合范围！');
+            }else{
+                this.submitSellGoldInfo();
+                this.node.removeFromParent();
+            }
         }
     }
 
@@ -190,10 +295,10 @@ export default class NewClass extends cc.Component {
         this.FormData = new FormData();
         this.FormData.append('user_id', this.app.UrlData.user_id)
         this.FormData.append('user_name', decodeURI(this.app.UrlData.user_name))
-        this.FormData.append('gold', this.amountInput.string)
-        this.FormData.append('exchange_price', this.priceInput.string)
+        this.FormData.append('gold', this.app.UrlData.client =='ios' ? this.amountLabel.string :this.amountInput.string)
+        this.FormData.append('exchange_price', this.app.UrlData.client =='ios' ? this.priceLabel.string:this.priceInput.string)
         this.FormData.append('pay_account', JSON.stringify(pay_account))
-        this.FormData.append('min_gold', this.sillInput.string)
+        this.FormData.append('min_gold', this.app.UrlData.client =='ios' ? this.sillLabel.string:this.sillInput.string)
         this.FormData.append('client', this.app.UrlData.client)
         this.FormData.append('proxy_user_id', this.app.UrlData.proxy_user_id)
         this.FormData.append('proxy_name', decodeURI(this.app.UrlData.proxy_name))
@@ -213,17 +318,31 @@ export default class NewClass extends cc.Component {
     }
 
     deleteAmount(){
-        this.amountInput.string = '';
+        if(this.app.UrlData.client=='ios'){
+            this.amountLabel.string = '输入出售金额';
+            this.setInputColor('',this.amountLabel);
+        }else{
+            this.amountInput.string = '';
+        }
     }
 
     deletePrice(){
-        this.priceInput.string = '';
+        if(this.app.UrlData.client=='ios'){
+            this.priceLabel.string = '最多三位小数';
+            this.setInputColor('',this.priceLabel);
+        }else{
+            this.priceInput.string = '';
+        }
     }
 
     deleteSill(){
-        this.sillInput.string = '';
+        if(this.app.UrlData.client=='ios'){
+            this.sillLabel.string = '输入金额';
+            this.setInputColor('',this.sillLabel);
+        }else{
+            this.sillInput.string = '';
+        }
     }
-
     removeSelf(){
         this.node.destroy();
     }

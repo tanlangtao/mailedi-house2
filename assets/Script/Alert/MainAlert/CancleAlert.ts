@@ -34,7 +34,6 @@ export default class NewClass extends cc.Component {
 
     onClick(){
         this.fetchCancle();
-        this.node.removeFromParent();
     }
 
     fetchCancle(){
@@ -48,16 +47,35 @@ export default class NewClass extends cc.Component {
             body:this.FormData
         }).then((data)=>data.json()).then((data)=>{
             if(data.status == 0){
+                this.imCancle();
+                this.app.showAlert('操作成功！');
                 // 刷新app数据
                 this.app.fetchIndex();
 
-                this.app.showAlert('操作成功！')
             }else{
                 this.app.showAlert(data.msg)
             }
         })
     }
-    
+
+    imCancle(){
+        let url = `${this.app.UrlData.imHost}/cancelOrder`;
+        this.FormData= new FormData();
+        this.FormData.append('user_id',this.app.UrlData.user_id);
+        this.FormData.append('order_id', this.data.order_id);
+        this.FormData.append('cancel_by', '0');
+        fetch(url,{
+            method:'POST',
+            body:this.FormData
+        }).then((data)=>data.json()).then((data)=>{
+            if(data.code == 0){
+                this.node.removeFromParent();
+            }else{
+                this.app.showAlert('消息发送失败！')
+            }
+        })
+    }
+
     removeSelf(){
         this.node.destroy();
     }

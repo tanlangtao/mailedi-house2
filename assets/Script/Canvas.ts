@@ -88,16 +88,29 @@ export default class NewClass extends cc.Component {
     //收款信息
     public accountInfo = null;
 
+    // 输入模块
+    inputComponent = {};
+    _component: any = {};
+
     protected onLoad(): void {
         this.config = new Config();
         this.UrlData =  this.config.getUrlData();
         this.token = this.config.token;
         this.Client = new ClientMessage();
-        this.fetchIndex();
+        this.getBlacklist();
+
+        // 输入结束事件
+        let self = this;
+        this.Client.addEventListener('__oninputend', (message)=>{
+            let text = message.data.text;
+            let component = message.data.component;
+            let method = message.data.method;
+            self.inputComponent[component][method](text)
+        })
 
     }
     start(){
-        this.Client.send('__done',{},()=>{})
+        this.Client.send('__done',{name:'pay'},()=>{})
     }
     // 加载支付宝图标
     public loadIcon(url,parent){
@@ -119,6 +132,35 @@ export default class NewClass extends cc.Component {
         })
     }
 
+    getBlacklist (){
+        let url = `${this.UrlData.host}/api/backend/findUserBlackList?user_id=${this.UrlData.user_id}&token=${this.token}&type=1`;
+        fetch(url,{
+            method:'get'
+        }).then((data)=>data.json()).then((data)=>{
+            if(data.status == 0){
+                let self = this;
+                if(data.data.has_blacklist == '2'){
+                    self.showAlert('您的账户存在异常，已被禁止进入交易所！')
+                    setTimeout(()=>{self.Client.send('__backtohall',{},()=>{})},2000)
+                }else{
+                    self.fetchIndex();
+                }
+            }else{
+                this.showAlert(data.msg)
+            }
+        }).catch((error)=>{
+            if(this.idx>=5){
+                this.showAlert(' 网络错误，请重试！');
+                let self = this;
+                //3秒后自动返回大厅
+                setTimeout(()=>{self.Client.send('__backtohall',{},()=>{})},2000)
+            }else{
+                //重新请求数据
+                this.fetchIndex();
+            }
+
+        })
+    }
     public fetchIndex(){
         this.idx = this.idx +1;
         let url = `${this.UrlData.host}/api/give/index?user_id=${this.UrlData.user_id}&token=${this.token}`;
@@ -186,8 +228,9 @@ export default class NewClass extends cc.Component {
                 var patrn = /[`~!@#$%^&*()_\-+=<>?:"{}|,.\/;'\\[\]·~！@#￥%……&*（）——\-+={}|《》？：“”【】、；‘’，。、]/im;
                 input.string = e.string.replace(patrn,'');
             }else if(type == 3){
-                //验证input,可以输入两位小数
+                //验证input,可以输入3位小数
                 let reg = /^\d{0,8}\.{0,1}(\d{0,3})?$/;
+
                 input.string = !reg.test(e.string) ? '' :e.string ;
             }else if(type == 4){
                 //验证input,密码
@@ -340,6 +383,46 @@ export default class NewClass extends cc.Component {
         var node = cc.instantiate(this.CancleAlert);
         this.node.addChild(node);
         node.getComponent('CancleAlert').init(data)
+    }
+
+    // 输入模块
+    setComponent(component) {
+        if (!this.inputComponent[component]) this.inputComponent[component] = {};
+        this._component = component;
+        return this
+    }
+    // 输入方法
+    setMethod(methodName, method) {
+        console.log(methodName)
+        this.inputComponent[this._component][methodName] = method;
+    }
+    public labelType(e,type){
+        let msg = e;
+        if(type == 1){
+            //验证input type = 1 不能以0开头的整数
+            msg  = e.replace(/[^\d]/g, '').replace(/^0{1,}/g, '').substring(0,6);
+        }else if(type == 2){
+            //验证input type = 2 不能输入特殊字符，保留5位
+            var patrn = /[`~!@#$%^&*()_\-+=<>?:"{}|,.\/;'\\[\]·~！@#￥%……&*（）——\-+={}|《》？：“”【】、；‘’，。、]/im;
+            msg  = e.replace(patrn,'').substring(0,10);
+        }else if(type == 3){
+            //验证input,可以输入三位小数
+            let reg = /^\d{0,8}\.{0,1}(\d{0,3})?$/;
+            msg  = !reg.test(e) ? '' : e ;
+        }else if(type == 4){
+
+            //验证input,密码
+            msg  = e.replace(/[^\d]/g, '');
+            msg = msg.substring(0,10)
+        }else if(type == 5){
+            //验证input type = 5 不能输入特殊字符,保留20位
+            var patrn = /[`~!@#$%^&*()_\-+=<>?:"{}|,.\/;'\\[\]·~！@#￥%……&*（）——\-+={}|《》？：“”【】、；‘’，。、]/im;
+            msg  = e.replace(patrn,'').substring(0,20);
+        }else if(type == 6){
+            //验证input type = 6 不能以0开头的整数 ,保留19位
+            msg  = e.replace(/[^\d]/g, '').replace(/^0{1,}/g, '').substring(0,19);
+        }
+        return msg
     }
 
 }

@@ -29,6 +29,15 @@ export default class NewClass extends cc.Component {
     @property(cc.Node)
     titleSprite : cc.Node = null;
 
+    @property(cc.Label)
+    firstNameLabel : cc.Label = null;
+
+    @property(cc.Label)
+    lastNameLabel : cc.Label = null;
+
+    @property(cc.Label)
+    accountLabel : cc.Label = null;
+
     @property()
     FormData = new FormData();
     public app = null;
@@ -60,18 +69,97 @@ export default class NewClass extends cc.Component {
         this.lastNameInput.node.on('text-changed',()=>{
             this.nameLabel.string = `${this.firstNameInput.string}${this.lastNameInput.string}`
         })
+
+        this.app.setComponent('alertLogin').setMethod('setAccountLabel', (text) => this.setAccountLabel(text));
+        this.app.setComponent('alertLogin').setMethod('setFirstNameLabel', (text) => this.setFirstNameLabel(text));
+        this.app.setComponent('alertLogin').setMethod('setLastNameLabel', (text) => this.setLastNameLabel(text));
+        //根据当前环境选择使用的输入组件
+        if(this.app.UrlData.client == 'ios'){
+            this.firstNameInput.node.active = false;
+            this.lastNameInput.node.active = false;
+            this.accountInput.node.active = false;
+
+            this.firstNameLabel.node.active = true;
+            this.lastNameLabel.node.active = true;
+            this.accountLabel.node.active = true;
+        }else{
+            this.firstNameInput.node.active = true;
+            this.lastNameInput.node.active = true;
+            this.accountInput.node.active = true;
+
+            this.firstNameLabel.node.active = false;
+            this.lastNameLabel.node.active = false;
+            this.accountLabel.node.active = false;
+        }
     }
+
+    setAccountLabel(msg) {
+        let msg2 = this.app.labelType(msg,6);
+        this.accountLabel.string = msg2 || '请输入账户';
+        this.setInputColor(msg2,this.accountLabel);
+    }
+
+    setFirstNameLabel(msg) {
+        let msg2 = this.app.labelType(msg,2);
+        this.firstNameLabel.string = msg2 ;
+        this.setInputColor(msg2,this.firstNameLabel);
+        this.nameLabel.string = `${this.firstNameLabel.string}${this.lastNameLabel.string}`;
+    }
+
+    setLastNameLabel(msg) {
+        let msg2 = this.app.labelType(msg,2);
+        this.lastNameLabel.string = msg2 ;
+        this.setInputColor(msg2,this.lastNameLabel);
+        this.nameLabel.string = `${this.firstNameLabel.string}${this.lastNameLabel.string}`;
+    }
+    setInputColor(msg,input){
+        let color1 = new cc.Color(255, 255, 255);
+        let color2 = new cc.Color(187, 187, 187);
+        //设置字的颜色
+        msg == '' ? input.node.color = color2:input.node.color = color1;
+    }
+    //Label点击回调
+    changeAccountLabel(){
+        //此处使用RN 的input组件
+        this.app.Client.send('__oninput', { text: this.accountLabel.string == '请输入账户' ? "" :this.accountLabel.string,
+            component: 'alertLogin', method: 'setAccountLabel' })
+    }
+
+    changeFirstNameLabel(){
+        //此处使用RN 的input组件
+        this.app.Client.send('__oninput', { text: this.firstNameLabel.string,
+            component: 'alertLogin', method: 'setFirstNameLabel' })
+    }
+
+    changeLastNameLabel(){
+        //此处使用RN 的input组件
+        this.app.Client.send('__oninput', { text: this.lastNameLabel.string,
+            component: 'alertLogin', method: 'setLastNameLabel' })
+    }
+
 
     onClick(){
 
-        if( this.accountInput.string == ''
-            || this.firstNameInput.string == ''
-            || this.lastNameInput.string == '' )
-        {
-            this.app.showAlert('输入不能为空!')
+        if(this.app.UrlData.client =='ios'){
+            if(this.accountLabel.string == '请输入账户'
+                || this.firstNameLabel.string == ''
+                || this.lastNameLabel.string == '' )
+            {
+                this.app.showAlert('输入不能为空!')
+            }else{
+                this.fetchBindAccountPay();
+                this.node.removeFromParent();
+            }
         }else{
-            this.fetchBindAccountPay();
-            this.node.removeFromParent();
+            if(this.accountInput.string == ''
+                || this.firstNameInput.string == ''
+                || this.lastNameInput.string == '' )
+            {
+                this.app.showAlert('输入不能为空!')
+            }else{
+                this.fetchBindAccountPay();
+                this.node.removeFromParent();
+            }
         }
     }
 
@@ -79,14 +167,25 @@ export default class NewClass extends cc.Component {
         let accNum = cc.find('Canvas/content/AccNum').getComponent('AccNum');
 
         let url = `${this.app.UrlData.host}/api/payment_account/saveAccount`;
-        let obj = {
-            account_card:this.accountInput.string,
-            account_surname:this.firstNameInput.string,
-            account_first_name:this.lastNameInput.string,
-            account_name:this.nameLabel.string,
+        let obj = {};
+        if(this.app.UrlData.client=='ios'){
+            obj = {
+                account_card:this.accountLabel.string,
+                account_surname:this.firstNameLabel.string,
+                account_first_name:this.lastNameLabel.string,
+                account_name:this.nameLabel.string,
+                pay_url:'',
+            };
+        }else{
+            obj = {
+                account_card:this.accountInput.string,
+                account_surname:this.firstNameInput.string,
+                account_first_name:this.lastNameInput.string,
+                account_name:this.nameLabel.string,
 
-            pay_url:'',
-        };
+                pay_url:'',
+            };
+        }
         let info = JSON.stringify(obj);
         this.FormData= new FormData();
         this.FormData.append('user_id',this.app.UrlData.user_id);
@@ -121,17 +220,34 @@ export default class NewClass extends cc.Component {
     }
 
     deleteFirstName(){
-        this.firstNameInput.string = '';
-        this.nameLabel.string = `${this.firstNameInput.string}${this.lastNameInput.string}`
+        if(this.app.UrlData.client=='ios'){
+            this.firstNameLabel.string = '';
+            this.setInputColor('',this.firstNameLabel);
+            this.nameLabel.string = `${this.firstNameLabel.string}${this.lastNameLabel.string}`;
+        }else{
+            this.firstNameInput.string = '';
+            this.nameLabel.string = `${this.firstNameInput.string}${this.lastNameInput.string}`
+        }
     }
 
     deleteLastName(){
-        this.lastNameInput.string = '';
-        this.nameLabel.string = `${this.firstNameInput.string}${this.lastNameInput.string}`
+        if(this.app.UrlData.client=='ios'){
+            this.lastNameLabel.string = '';
+            this.setInputColor('',this.lastNameLabel);
+            this.nameLabel.string = `${this.firstNameLabel.string}${this.lastNameLabel.string}`;
+        }else{
+            this.lastNameInput.string = '';
+            this.nameLabel.string = `${this.firstNameInput.string}${this.lastNameInput.string}`;
+        }
     }
 
     deleteAccount(){
-        this.accountInput.string = '';
+        if(this.app.UrlData.client=='ios'){
+            this.accountLabel.string = '请输入账户';
+            this.setInputColor('',this.accountLabel);
+        }else{
+            this.accountInput.string = '';
+        }
     }
     
     removeSelf(){

@@ -33,6 +33,15 @@ export default class NewClass extends cc.Component {
     @property(cc.Node)
     titleSprite : cc.Node = null;
 
+    @property(cc.Label)
+    nameLabel:cc.Label = null;
+
+    @property(cc.Label)
+    accountLabel:cc.Label = null;
+
+    @property(cc.Label)
+    bankNameLabel:cc.Label = null;
+
     @property()
     FormData = new FormData();
     showSelect = false;
@@ -57,35 +66,117 @@ export default class NewClass extends cc.Component {
         this.app.getPublicInput(this.accountInput,1);
         this.app.getPublicInput(this.nameInput,2);
         this.app.getPublicInput(this.bankNameInput,2);
+
+        this.app.setComponent('alertLogin').setMethod('setAccountLabel', (text) => this.setAccountLabel(text));
+        this.app.setComponent('alertLogin').setMethod('setNameLabel', (text) => this.setNameLabel(text));
+        this.app.setComponent('alertLogin').setMethod('setBankLabel', (text) => this.setBankLabel(text));
+        //根据当前环境选择使用的输入组件
+        if(this.app.UrlData.client == 'ios'){
+            this.nameInput.node.active = false;
+            this.accountInput.node.active = false;
+            this.bankNameInput.node.active = false;
+
+            this.nameLabel.node.active = true;
+            this.accountLabel.node.active = true;
+            this.bankNameLabel.node.active = true;
+        }else{
+            this.nameInput.node.active = true;
+            this.accountInput.node.active = true;
+            this.bankNameInput.node.active = true;
+
+            this.nameLabel.node.active = false;
+            this.accountLabel.node.active = false;
+            this.bankNameLabel.node.active = false;
+        }
     }
 
-    start () {
-
+    setAccountLabel(msg) {
+        let msg2 = this.app.labelType(msg,6);
+        this.accountLabel.string = msg2 || '请输入卡号';
+        this.setInputColor(msg2,this.accountLabel);
     }
 
+    setNameLabel(msg) {
+        let msg2 = this.app.labelType(msg,2);
+        this.nameLabel.string = msg2 || '请输入姓名';
+        this.setInputColor(msg2,this.nameLabel);
+    }
+
+    setBankLabel(msg) {
+        let msg2 = this.app.labelType(msg,5);
+        this.bankNameLabel.string = msg2 || '请输入开户行';
+        this.setInputColor(msg2,this.bankNameLabel);
+    }
+    setInputColor(msg,input){
+        let color1 = new cc.Color(255, 255, 255);
+        let color2 = new cc.Color(187, 187, 187);
+        //设置字的颜色
+        msg == '' ? input.node.color = color2:input.node.color = color1;
+    }
+    //Label点击回调
+    changeAccountLabel(){
+        //此处使用RN 的input组件
+        this.app.Client.send('__oninput', { text: this.accountLabel.string == '请输入卡号' ? "" :this.accountLabel.string,
+            component: 'alertLogin', method: 'setAccountLabel' })
+    }
+
+    changeNameLabel(){
+        //此处使用RN 的input组件
+        this.app.Client.send('__oninput', { text: this.nameLabel.string == '请输入姓名' ? "" :this.nameLabel.string,
+            component: 'alertLogin', method: 'setNameLabel' })
+    }
+
+    changeBankLabel(){
+        //此处使用RN 的input组件
+        this.app.Client.send('__oninput', { text: this.bankNameLabel.string == '请输入开户行' ? "" :this.bankNameLabel.string,
+            component: 'alertLogin', method: 'setBankLabel' })
+    }
     onClick(){
 
-        if(this.accountInput.string == '' || this.nameInput.string == ''){
-            this.app.showAlert('姓名和卡号不能为空!')
-        }else if(this.selectLabel.string == '请选择银行'){
-            this.app.showAlert('请选择银行！')
-        }else if(this.bankNameInput.string == ''){
-            this.app.showAlert('开户行不能为空！')
+        if(this.app.UrlData.client == 'ios'){
+            if(this.accountLabel.string == '请输入卡号' || this.nameLabel.string == '请输入姓名'){
+                this.app.showAlert('姓名和卡号不能为空!')
+            }else if(this.selectLabel.string == '请选择银行'){
+                this.app.showAlert('请选择银行！')
+            }else if(this.bankNameLabel.string == '请输入开户行'){
+                this.app.showAlert('开户行不能为空！')
+            }else{
+                this.fetchBindAccountPay();
+                this.node.removeFromParent();
+            }
         }else{
-            this.fetchBindAccountPay();
-            this.node.removeFromParent();
+            if(this.accountInput.string == '' || this.nameInput.string == ''){
+                this.app.showAlert('姓名和卡号不能为空!')
+            }else if(this.selectLabel.string == '请选择银行'){
+                this.app.showAlert('请选择银行！')
+            }else if(this.bankNameInput.string == ''){
+                this.app.showAlert('开户行不能为空！')
+            }else{
+                this.fetchBindAccountPay();
+                this.node.removeFromParent();
+            }
         }
     }
 
     fetchBindAccountPay(){
         let accNum = cc.find('Canvas/content/AccNum').getComponent('AccNum');
         var url = `${this.app.UrlData.host}/api/payment_account/saveAccount`;
-        let obj = {
-            card_num:this.accountInput.string,
-            card_name:this.nameInput.string,
-            bank_name:this.selectLabel.string,
-            branch_name:this.bankNameInput.string,
-        };
+        let obj = {};
+        if(this.app.UrlData.client == 'ios'){
+            obj = {
+                card_num:this.accountLabel.string,
+                card_name:this.nameLabel.string,
+                bank_name:this.selectLabel.string,
+                branch_name:this.bankNameLabel.string,
+            };
+        }else{
+            obj = {
+                card_num:this.accountInput.string,
+                card_name:this.nameInput.string,
+                bank_name:this.selectLabel.string,
+                branch_name:this.bankNameInput.string,
+            };
+        }
         let info = JSON.stringify(obj);
         this.FormData= new FormData();
         this.FormData.append('user_id',this.app.UrlData.user_id);
@@ -138,15 +229,30 @@ export default class NewClass extends cc.Component {
     }
 
     deleteName(){
-        this.nameInput.string = '';
+        if(this.app.UrlData.client=='ios'){
+            this.nameLabel.string = '请输入姓名';
+            this.setInputColor('',this.nameLabel);
+        }else{
+            this.nameInput.string = '';
+        }
     }
 
     deleteAccount(){
-        this.accountInput.string = '';
+        if(this.app.UrlData.client=='ios'){
+            this.accountLabel.string = '请输入卡号';
+            this.setInputColor('',this.accountLabel);
+        }else{
+            this.accountInput.string = '';
+        }
     }
 
     deleteBankName(){
-        this.bankNameInput.string = '';
+        if(this.app.UrlData.client=='ios'){
+            this.bankNameLabel.string = '请输入开户行';
+            this.setInputColor('',this.bankNameLabel);
+        }else{
+            this.bankNameInput.string = '';
+        }
     }
     
     removeSelf(){

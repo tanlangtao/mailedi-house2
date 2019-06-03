@@ -15,6 +15,9 @@ export default class NewClass extends cc.Component {
     @property(cc.EditBox)
     passwordInput: cc.EditBox = null;
 
+    @property(cc.Label)
+    passwordLabel: cc.Label = null;
+
     @property()
     FormData = new FormData();
     showSelect = false;
@@ -28,26 +31,69 @@ export default class NewClass extends cc.Component {
     onLoad () {
         this.app = cc.find('Canvas').getComponent('Canvas');
         this.app.getPublicInput(this.passwordInput,4);
+
+        this.app.setComponent('alertLogin').setMethod('setPassword', (text) => this.setPassword(text));
+        //根据当前环境选择使用的输入组件
+        if(this.app.UrlData.client == 'ios'){
+            this.passwordInput.node.active = false;
+            this.passwordLabel.node.active = true;
+        }else{
+            this.passwordInput.node.active = true;
+            this.passwordLabel.node.active = false;
+        }
     }
 
-    start () {
+    setPassword(msg) {
+        let msg2 = this.app.labelType(msg,4);
+        this.passwordLabel.string = msg2 || '(6-10位)';
+        this.setInputColor(msg2,this.passwordLabel);
+    }
 
+    setInputColor(msg,input){
+        let color1 = new cc.Color(255, 255, 255);
+        let color2 = new cc.Color(187, 187, 187);
+        //设置字的颜色
+        msg == '' ? input.node.color = color2:input.node.color = color1;
+    }
+    //Label点击回调
+    changeAccountLabel(){
+        //此处使用RN 的input组件
+        this.app.Client.send('__oninput', { text: this.passwordLabel.string == '(6-10位)' ? "" :this.passwordLabel.string,
+            component: 'alertLogin', method: 'setPassword' })
     }
 
     onClick(){
 
-        if(this.passwordInput.string == '' ){
-            this.app.showAlert('密码不能为空!')
-        }else if(this.passwordInput.string.length < 6 || this.passwordInput.string.length > 10){
-            this.app.showAlert('密码错误！')
+        if(this.app.UrlData.client =='ios'){
+            if(this.passwordLabel.string == '(6-10位)' ){
+                this.app.showAlert('密码不能为空!')
+            }else if(this.passwordLabel.string.length < 6 || this.passwordLabel.string.length > 10){
+                this.app.showAlert('密码错误！')
+            }else{
+                this.node.removeFromParent();
+                this.fetchcheckPassword();
+            }
         }else{
-            this.node.removeFromParent();
-            this.fetchcheckPassword();
+            if(this.passwordInput.string == '' ){
+                this.app.showAlert('密码不能为空!')
+            }else if(this.passwordInput.string.length < 6 || this.passwordInput.string.length > 10){
+                this.app.showAlert('密码错误！')
+            }else{
+                this.node.removeFromParent();
+                this.fetchcheckPassword();
+            }
+
         }
     }
 
     fetchcheckPassword(){
-        var url = `${this.app.UrlData.host}/api/user_funds_password/checkPassword?user_id=${this.app.UrlData.user_id}&password=${this.passwordInput.string}&token=${this.app.token}`;
+
+        if(this.app.UrlData.client=='ios'){
+            var url = `${this.app.UrlData.host}/api/user_funds_password/checkPassword?user_id=${this.app.UrlData.user_id}&password=${this.passwordLabel.string}&token=${this.app.token}`;
+        }else{
+            var url = `${this.app.UrlData.host}/api/user_funds_password/checkPassword?user_id=${this.app.UrlData.user_id}&password=${this.passwordInput.string}&token=${this.app.token}`;
+        }
+
         fetch(url,{
             method:'GET',
         }).then((data)=>data.json()).then((data)=>{
@@ -78,7 +124,12 @@ export default class NewClass extends cc.Component {
         })
     }
     deletePassword(){
-        this.passwordInput.string = '';
+        if(this.app.UrlData.client=='ios'){
+            this.passwordLabel.string = '(6-10位)';
+            this.setInputColor('',this.passwordLabel);
+        }else{
+            this.passwordInput.string = '';
+        }
     }
     
     removeSelf(){

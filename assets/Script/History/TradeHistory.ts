@@ -65,16 +65,19 @@ export default class NewClass extends cc.Component {
     //全部
     toggle1Click(){
         this.status = 0;
+        this.page = 1;
         this.fetchIndex();
     }
     //未完成
     toggle2Click(){
         this.status = 2;
+        this.page = 1;
         this.fetchIndex();
     }
     //已完成
     toggle3Click(){
         this.status = 6;
+        this.page = 1;
         this.fetchIndex();
     }
 

@@ -60,7 +60,8 @@ export default class NewClass extends cc.Component {
         //剩余金币
         this.last_goldLabel.string = data.last_gold ? `${parseInt(data.last_gold)}` :'0';
         // 兑换单价
-        this.exchange_priceLabel.string = this.app.config.toDecimal(data.exchange_price);
+        console.log(data.exchange_price)
+        this.exchange_priceLabel.string = this.app.config.toDecimal3(data.exchange_price);
         //最低兑换数量
         this.min_goldLabel.string = data.min_gold ? `${parseInt(data.min_gold)}` :'0';
         // 兑换方式

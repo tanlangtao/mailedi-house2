@@ -60,7 +60,7 @@ export default class NewClass extends cc.Component {
         this.statusLabel.string = data.status == 1 ? "未支付"
             :(data.status == 2 ? '已过期'
                 :(data.status == 4 ? '已撤销'
-                    :(data.status == 5 ?'已支付' :(data.status == 6 ? "已完成" :'无效订单')))) ;
+                    :(data.status == 5 ?'已支付' :(data.status == 6 ? "已完成" :'未完成')))) ;
 
     }
 }

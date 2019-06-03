@@ -96,7 +96,7 @@ export default class Config extends cc.Component {
             alert('传递参数错误，请检查！');
             return false;
         }
-        result = Math.round(num * 100) / 100;
+        result = Math.round(num * 1000) / 1000;
         var s_x = result.toString();
         var pos_decimal = s_x.indexOf('.');
         if (pos_decimal < 0) {
