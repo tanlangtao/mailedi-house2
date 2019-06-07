@@ -149,7 +149,7 @@ export default class NewClass extends cc.Component {
             body:this.FormData
         }).then((data)=>data.json()).then((data)=>{
             if(data.status == 0){
-                this.parentComponent.fetchIndex();
+                this.app.fetchIndex();
                 this.app.showAlert('操作成功！')
             }else{
                 this.app.showAlert(data.msg)

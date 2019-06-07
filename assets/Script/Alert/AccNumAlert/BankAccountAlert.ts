@@ -136,6 +136,8 @@ export default class NewClass extends cc.Component {
         if(this.app.UrlData.client == 'ios'){
             if(this.accountLabel.string == '请输入卡号' || this.nameLabel.string == '请输入姓名'){
                 this.app.showAlert('姓名和卡号不能为空!')
+            }else if(this.accountLabel.string.length>19||this.accountLabel.string.length<15){
+                this.app.showAlert('无效卡号！')
             }else if(this.selectLabel.string == '请选择银行'){
                 this.app.showAlert('请选择银行！')
             }else if(this.bankNameLabel.string == '请输入开户行'){
@@ -147,6 +149,8 @@ export default class NewClass extends cc.Component {
         }else{
             if(this.accountInput.string == '' || this.nameInput.string == ''){
                 this.app.showAlert('姓名和卡号不能为空!')
+            }else if(this.accountInput.string.length>19||this.accountInput.string.length<15){
+                this.app.showAlert('无效卡号！')
             }else if(this.selectLabel.string == '请选择银行'){
                 this.app.showAlert('请选择银行！')
             }else if(this.bankNameInput.string == ''){
