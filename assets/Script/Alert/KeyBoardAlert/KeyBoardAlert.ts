@@ -29,7 +29,7 @@ export default class NewClass extends cc.Component {
     }
 
     setInputColor(msg,input){
-        let color1 = new cc.Color(255, 255, 255);
+        let color1 = new cc.Color(212, 223, 255);
         let color2 = new cc.Color(187, 187, 187);
         //设置字的颜色
         msg == '' ? input.node.color = color2:input.node.color = color1;

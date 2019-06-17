@@ -56,6 +56,10 @@ export default class NewClass extends cc.Component {
         this.firstNameInput.string = data.account_surname;
         this.lastNameInput.string = data.account_first_name;
         this.app.loadFont('/xiugaizfb',this.titleSprite);
+
+        this.accountLabel.string = data.account_card;
+        this.firstNameLabel.string = data.account_surname;
+        this.lastNameLabel.string = data.account_first_name;
     }
 
     onLoad () {
@@ -74,7 +78,7 @@ export default class NewClass extends cc.Component {
         this.app.setComponent('alertLogin').setMethod('setFirstNameLabel', (text) => this.setFirstNameLabel(text));
         this.app.setComponent('alertLogin').setMethod('setLastNameLabel', (text) => this.setLastNameLabel(text));
         //根据当前环境选择使用的输入组件
-        if(this.app.UrlData.client == 'ios'){
+        if(this.app.UrlData.client != 'desktop'){
             this.firstNameInput.node.active = false;
             this.lastNameInput.node.active = false;
             this.accountInput.node.active = false;
@@ -95,7 +99,7 @@ export default class NewClass extends cc.Component {
 
     setAccountLabel(msg) {
         let msg2 = this.app.labelType(msg,6);
-        this.accountLabel.string = msg2 || '请输入账户';
+        this.accountLabel.string = msg2 || '请输入账号';
         this.setInputColor(msg2,this.accountLabel);
     }
 
@@ -113,7 +117,7 @@ export default class NewClass extends cc.Component {
         this.nameLabel.string = `${this.firstNameLabel.string}${this.lastNameLabel.string}`;
     }
     setInputColor(msg,input){
-        let color1 = new cc.Color(255, 255, 255);
+        let color1 = new cc.Color(212, 223, 255);
         let color2 = new cc.Color(187, 187, 187);
         //设置字的颜色
         msg == '' ? input.node.color = color2:input.node.color = color1;
@@ -121,7 +125,7 @@ export default class NewClass extends cc.Component {
     //Label点击回调
     changeAccountLabel(){
         //此处使用RN 的input组件
-        this.app.Client.send('__oninput', { text: this.accountLabel.string == '请输入账户' ? "" :this.accountLabel.string,
+        this.app.Client.send('__oninput', { text: this.accountLabel.string == '请输入账号' ? "" :this.accountLabel.string,
             component: 'alertLogin', method: 'setAccountLabel' })
     }
 
@@ -140,8 +144,8 @@ export default class NewClass extends cc.Component {
 
     onClick(){
 
-        if(this.app.UrlData.client =='ios'){
-            if(this.accountLabel.string == '请输入账户'
+        if(this.app.UrlData.client != 'desktop'){
+            if(this.accountLabel.string == '请输入账号'
                 || this.firstNameLabel.string == ''
                 || this.lastNameLabel.string == '' )
             {
@@ -168,7 +172,7 @@ export default class NewClass extends cc.Component {
 
         let url = `${this.app.UrlData.host}/api/payment_account/saveAccount`;
         let obj = {};
-        if(this.app.UrlData.client=='ios'){
+        if(this.app.UrlData.client != 'desktop'){
             obj = {
                 account_card:this.accountLabel.string,
                 account_surname:this.firstNameLabel.string,
@@ -220,7 +224,7 @@ export default class NewClass extends cc.Component {
     }
 
     deleteFirstName(){
-        if(this.app.UrlData.client=='ios'){
+        if(this.app.UrlData.client != 'desktop'){
             this.firstNameLabel.string = '';
             this.setInputColor('',this.firstNameLabel);
             this.nameLabel.string = `${this.firstNameLabel.string}${this.lastNameLabel.string}`;
@@ -231,7 +235,7 @@ export default class NewClass extends cc.Component {
     }
 
     deleteLastName(){
-        if(this.app.UrlData.client=='ios'){
+        if(this.app.UrlData.client != 'desktop'){
             this.lastNameLabel.string = '';
             this.setInputColor('',this.lastNameLabel);
             this.nameLabel.string = `${this.firstNameLabel.string}${this.lastNameLabel.string}`;
@@ -242,8 +246,8 @@ export default class NewClass extends cc.Component {
     }
 
     deleteAccount(){
-        if(this.app.UrlData.client=='ios'){
-            this.accountLabel.string = '请输入账户';
+        if(this.app.UrlData.client != 'desktop'){
+            this.accountLabel.string = '请输入账号';
             this.setInputColor('',this.accountLabel);
         }else{
             this.accountInput.string = '';

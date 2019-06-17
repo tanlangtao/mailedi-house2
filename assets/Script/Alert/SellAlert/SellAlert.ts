@@ -79,7 +79,7 @@ export default class NewClass extends cc.Component {
         this.app.setComponent('alertLogin').setMethod('setPrice', (text) => this.setPrice(text));
         this.app.setComponent('alertLogin').setMethod('setSill', (text) => this.setSill(text));
         //根据当前环境选择使用的输入组件
-        if(this.app.UrlData.client == 'ios'){
+        if(this.app.UrlData.client != 'desktop'){
             this.amountInput.node.active = false;
             this.priceInput.node.active = false;
             this.sillInput.node.active = false;
@@ -116,7 +116,7 @@ export default class NewClass extends cc.Component {
         this.setInputColor(msg2,this.sillLabel);
     }
     setInputColor(msg,input){
-        let color1 = new cc.Color(255, 255, 255);
+        let color1 = new cc.Color(212, 223, 255);
         let color2 = new cc.Color(187, 187, 187);
         //设置字的颜色
         msg == '' ? input.node.color = color2:input.node.color = color1;
@@ -223,7 +223,7 @@ export default class NewClass extends cc.Component {
     }
 
     onClick(){
-        if(this.app.UrlData.client=='ios'){
+        if(this.app.UrlData.client != 'desktop'){
             let amount = Number(this.amountLabel.string);
             let price = Number(this.priceLabel.string);
             let sill = Number(this.sillLabel.string);
@@ -318,7 +318,7 @@ export default class NewClass extends cc.Component {
     }
 
     deleteAmount(){
-        if(this.app.UrlData.client=='ios'){
+        if(this.app.UrlData.client != 'desktop'){
             this.amountLabel.string = '输入出售金额';
             this.setInputColor('',this.amountLabel);
         }else{
@@ -327,7 +327,7 @@ export default class NewClass extends cc.Component {
     }
 
     deletePrice(){
-        if(this.app.UrlData.client=='ios'){
+        if(this.app.UrlData.client != 'desktop'){
             this.priceLabel.string = '最多三位小数';
             this.setInputColor('',this.priceLabel);
         }else{
@@ -336,7 +336,7 @@ export default class NewClass extends cc.Component {
     }
 
     deleteSill(){
-        if(this.app.UrlData.client=='ios'){
+        if(this.app.UrlData.client != 'desktop'){
             this.sillLabel.string = '输入金额';
             this.setInputColor('',this.sillLabel);
         }else{

@@ -91,6 +91,8 @@ export default class NewClass extends cc.Component {
     // 输入模块
     inputComponent = {};
     _component: any = {};
+    //验证密码
+    isTestPassworld = false;
 
     protected onLoad(): void {
         this.config = new Config();
@@ -140,7 +142,8 @@ export default class NewClass extends cc.Component {
             if(data.status == 0){
                 let self = this;
                 if(data.data.has_blacklist == '2'){
-                    self.showAlert('您的账户存在异常，已被禁止进入交易所！')
+                    self.showAlert('您的账户存在异常，已被禁止进入交易所！');
+                    this.content.removeAllChildren();
                     setTimeout(()=>{self.Client.send('__backtohall',{},()=>{})},2000)
                 }else{
                     self.fetchIndex();
@@ -257,7 +260,11 @@ export default class NewClass extends cc.Component {
             if(this.accountInfo.data.has_account == 0){
                 this.showAlert('请先到收付款账号界面添加收付款方式！')
             }else{
-                this.showTestPasswordAlert(2)
+                if(this.isTestPassworld){
+                    this.showSellAlert();
+                }else{
+                    this.showTestPasswordAlert(2)
+                }
             }
         }else{
             this.showSetPasswordAlert(this);

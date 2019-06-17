@@ -32,7 +32,12 @@ export default class NewClass extends cc.Component {
     }
 
     onClick(){
-        this.app.showTestPasswordAlert(6);
+        if(this.app.isTestPassworld){
+            var give = cc.find('Canvas/content/Give').getComponent('Give');
+            give.fetchGive();
+        }else{
+            this.app.showTestPasswordAlert(6);
+        }
         this.node.removeFromParent();
     }
 

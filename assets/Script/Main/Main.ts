@@ -34,7 +34,7 @@ export default class NewClass extends cc.Component {
     }
 
     public fetchIndex(){
-        var url = `${this.app.UrlData.host}/api/sell_gold/sellGoldList?page=${this.page}&page_set=8&token=${this.app.token}`;
+        var url = `${this.app.UrlData.host}/api/sell_gold/sellGoldList?page=${this.page}&page_set=7&token=${this.app.token}`;
         fetch(url, {
             method: 'get'
         }).then((data) => data.json()).then((data) => {
@@ -60,7 +60,12 @@ export default class NewClass extends cc.Component {
 
     accNumClick(){
         if(this.app.is_password == 1){
-            this.app.showTestPasswordAlert(1)
+            if(this.app.isTestPassworld){
+                this.app.showAccNum();
+            }else{
+                this.app.showTestPasswordAlert(1)
+            }
+            
         }else if (this.app.is_password == 0){
             this.app.showSetPasswordAlert(this)
         }

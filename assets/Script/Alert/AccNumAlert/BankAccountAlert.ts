@@ -60,6 +60,10 @@ export default class NewClass extends cc.Component {
         this.selectLabel.string = data.bank_name;
         this.bankNameInput.string = data.branch_name;
         this.app.loadFont('/xiugaiyinhng',this.titleSprite);
+
+        this.accountLabel.string = data.card_num;
+        this.nameLabel.string = data.card_name;
+        this.bankNameLabel.string = data.branch_name;
     }
     onLoad () {
         this.app = cc.find('Canvas').getComponent('Canvas');
@@ -71,7 +75,7 @@ export default class NewClass extends cc.Component {
         this.app.setComponent('alertLogin').setMethod('setNameLabel', (text) => this.setNameLabel(text));
         this.app.setComponent('alertLogin').setMethod('setBankLabel', (text) => this.setBankLabel(text));
         //根据当前环境选择使用的输入组件
-        if(this.app.UrlData.client == 'ios'){
+        if(this.app.UrlData.client != 'desktop'){
             this.nameInput.node.active = false;
             this.accountInput.node.active = false;
             this.bankNameInput.node.active = false;
@@ -108,7 +112,7 @@ export default class NewClass extends cc.Component {
         this.setInputColor(msg2,this.bankNameLabel);
     }
     setInputColor(msg,input){
-        let color1 = new cc.Color(255, 255, 255);
+        let color1 = new cc.Color(212, 223, 255);
         let color2 = new cc.Color(187, 187, 187);
         //设置字的颜色
         msg == '' ? input.node.color = color2:input.node.color = color1;
@@ -132,8 +136,7 @@ export default class NewClass extends cc.Component {
             component: 'alertLogin', method: 'setBankLabel' })
     }
     onClick(){
-
-        if(this.app.UrlData.client == 'ios'){
+        if(this.app.UrlData.client != 'desktop'){
             if(this.accountLabel.string == '请输入卡号' || this.nameLabel.string == '请输入姓名'){
                 this.app.showAlert('姓名和卡号不能为空!')
             }else if(this.accountLabel.string.length>19||this.accountLabel.string.length<15){
@@ -166,7 +169,7 @@ export default class NewClass extends cc.Component {
         let accNum = cc.find('Canvas/content/AccNum').getComponent('AccNum');
         var url = `${this.app.UrlData.host}/api/payment_account/saveAccount`;
         let obj = {};
-        if(this.app.UrlData.client == 'ios'){
+        if(this.app.UrlData.client != 'desktop'){
             obj = {
                 card_num:this.accountLabel.string,
                 card_name:this.nameLabel.string,
@@ -233,7 +236,7 @@ export default class NewClass extends cc.Component {
     }
 
     deleteName(){
-        if(this.app.UrlData.client=='ios'){
+        if(this.app.UrlData.client != 'desktop'){
             this.nameLabel.string = '请输入姓名';
             this.setInputColor('',this.nameLabel);
         }else{
@@ -242,7 +245,7 @@ export default class NewClass extends cc.Component {
     }
 
     deleteAccount(){
-        if(this.app.UrlData.client=='ios'){
+        if(this.app.UrlData.client != 'desktop'){
             this.accountLabel.string = '请输入卡号';
             this.setInputColor('',this.accountLabel);
         }else{
@@ -251,7 +254,7 @@ export default class NewClass extends cc.Component {
     }
 
     deleteBankName(){
-        if(this.app.UrlData.client=='ios'){
+        if(this.app.UrlData.client != 'desktop'){
             this.bankNameLabel.string = '请输入开户行';
             this.setInputColor('',this.bankNameLabel);
         }else{

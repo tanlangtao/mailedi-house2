@@ -37,8 +37,8 @@ export default class NewClass extends cc.Component {
         this.app.getPublicInput(this.amountInput,1);
 
         this.app.setComponent('alertLogin').setMethod('setAmount', (text) => this.setAmount(text));
-        //根据当前环境选择使用的输入组件
-        if(this.app.UrlData.client == 'ios'){
+         //根据当前环境选择使用的输入组件
+         if(this.app.UrlData.client != 'desktop'){
             this.amountInput.node.active = false;
             this.amountLabel.node.active = true;
         }else{
@@ -53,7 +53,7 @@ export default class NewClass extends cc.Component {
     }
 
     setInputColor(msg,input){
-        let color1 = new cc.Color(255, 255, 255);
+        let color1 = new cc.Color(212, 223, 255);
         let color2 = new cc.Color(187, 187, 187);
         //设置字的颜色
         msg == '' ? input.node.color = color2:input.node.color = color1;
@@ -66,7 +66,7 @@ export default class NewClass extends cc.Component {
     }
 
     onClick(){
-        if(this.app.UrlData.client == 'ios'){
+        if(this.app.UrlData.client != 'desktop'){
             if(Number(this.data.min_gold) >Number(this.amountLabel.string)){
                 this.app.showAlert('小于最低交易额!')
             }else if(Number(this.data.last_gold) < Number(this.amountLabel.string)){
@@ -139,7 +139,7 @@ export default class NewClass extends cc.Component {
         this.FormData.append('user_name',decodeURI(this.app.UrlData.user_name));
         this.FormData.append('replace_id',this.data.user_id);
         this.FormData.append('replace_name',this.data.user_name);
-        this.FormData.append('gold',this.app.UrlData.client =='ios'? this.amountLabel.string : this.amountInput.string);
+        this.FormData.append('gold',this.app.UrlData.client != 'desktop'? this.amountLabel.string : this.amountInput.string);
         this.FormData.append('amount',`${amount}`);
         this.FormData.append('sell_id',this.data.id);
         this.FormData.append('exchange_price',this.data.exchange_price);
@@ -170,7 +170,7 @@ export default class NewClass extends cc.Component {
 
     deleteAmount(){
         this.amountInput.string ='';
-        if(this.app.UrlData.client === 'ios'){
+        if(this.app.UrlData.client != 'desktop'){
             this.amountLabel.string = '请输入金额';
             this.setInputColor('',this.amountLabel);
         }else{

@@ -36,7 +36,7 @@ export default class NewClass extends cc.Component {
 
         this.app.setComponent('alertLogin').setMethod('setPassword', (text) => this.setPassword(text));
         //根据当前环境选择使用的输入组件
-        if(this.app.UrlData.client == 'ios'){
+        if(this.app.UrlData.client != 'desktop'){
             this.passwordInput.node.active = false;
             this.passwordLabel.node.active = true;
         }else{
@@ -53,7 +53,7 @@ export default class NewClass extends cc.Component {
     }
 
     setInputColor(msg,input){
-        let color1 = new cc.Color(255, 255, 255);
+        let color1 = new cc.Color(212, 223, 255);
         let color2 = new cc.Color(187, 187, 187);
         //设置字的颜色
         msg == '' ? input.node.color = color2:input.node.color = color1;
@@ -67,7 +67,7 @@ export default class NewClass extends cc.Component {
 
     onClick(){
 
-        if(this.app.UrlData.client =='ios'){
+        if(this.app.UrlData.client != 'desktop'){
             if(this.passwordLabel.string == '(6-10位)' ){
                 this.app.showAlert('密码不能为空!')
             }else if(this.passwordLabel.string.length < 6 || this.passwordLabel.string.length > 10){
@@ -92,7 +92,7 @@ export default class NewClass extends cc.Component {
         var url = `${this.app.UrlData.host}/api/user_funds_password/bindPassword`;
         this.FormData= new FormData();
         this.FormData.append('user_id',this.app.UrlData.user_id)
-        this.FormData.append('password',this.app.UrlData.client =='ios' ? this.passwordLabel.string :this.passwordInput.string);
+        this.FormData.append('password',this.app.UrlData.client != 'desktop'? this.passwordLabel.string :this.passwordInput.string);
         this.FormData.append('token',this.app.token);
         fetch(url,{
             method:'POST',
@@ -107,7 +107,7 @@ export default class NewClass extends cc.Component {
         })
     }
     deletePassword(){
-        if(this.app.UrlData.client=='ios'){
+        if(this.app.UrlData.client != 'desktop'){
             this.passwordLabel.string = '(6-10位)';
             this.setInputColor('',this.passwordLabel);
         }else{

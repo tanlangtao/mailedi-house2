@@ -34,7 +34,7 @@ export default class NewClass extends cc.Component {
 
         this.app.setComponent('alertLogin').setMethod('setPassword', (text) => this.setPassword(text));
         //根据当前环境选择使用的输入组件
-        if(this.app.UrlData.client == 'ios'){
+        if(this.app.UrlData.client != 'desktop'){
             this.passwordInput.node.active = false;
             this.passwordLabel.node.active = true;
         }else{
@@ -50,7 +50,7 @@ export default class NewClass extends cc.Component {
     }
 
     setInputColor(msg,input){
-        let color1 = new cc.Color(255, 255, 255);
+        let color1 = new cc.Color(212, 223, 255);
         let color2 = new cc.Color(187, 187, 187);
         //设置字的颜色
         msg == '' ? input.node.color = color2:input.node.color = color1;
@@ -64,7 +64,7 @@ export default class NewClass extends cc.Component {
 
     onClick(){
 
-        if(this.app.UrlData.client =='ios'){
+        if(this.app.UrlData.client != 'desktop'){
             if(this.passwordLabel.string == '(6-10位)' ){
                 this.app.showAlert('密码不能为空!')
             }else if(this.passwordLabel.string.length < 6 || this.passwordLabel.string.length > 10){
@@ -82,13 +82,12 @@ export default class NewClass extends cc.Component {
                 this.node.removeFromParent();
                 this.fetchcheckPassword();
             }
-
         }
     }
 
     fetchcheckPassword(){
 
-        if(this.app.UrlData.client=='ios'){
+        if(this.app.UrlData.client != 'desktop'){
             var url = `${this.app.UrlData.host}/api/user_funds_password/checkPassword?user_id=${this.app.UrlData.user_id}&password=${this.passwordLabel.string}&token=${this.app.token}`;
         }else{
             var url = `${this.app.UrlData.host}/api/user_funds_password/checkPassword?user_id=${this.app.UrlData.user_id}&password=${this.passwordInput.string}&token=${this.app.token}`;
@@ -98,6 +97,8 @@ export default class NewClass extends cc.Component {
             method:'GET',
         }).then((data)=>data.json()).then((data)=>{
             if(data.status == 0){
+                //验证成功，保存验证结果
+                this.app.isTestPassworld = true;
                 // type = 1,显示收付款信息
                 //type =2 ,显示出售
                 // type =6 ,确认赠送
@@ -119,12 +120,13 @@ export default class NewClass extends cc.Component {
                 }
 
             }else{
+                this.app.isTestPassworld = false;
                 this.app.showAlert(data.msg)
             }
         })
     }
     deletePassword(){
-        if(this.app.UrlData.client=='ios'){
+        if(this.app.UrlData.client != 'desktop'){
             this.passwordLabel.string = '(6-10位)';
             this.setInputColor('',this.passwordLabel);
         }else{

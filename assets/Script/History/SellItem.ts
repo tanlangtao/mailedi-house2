@@ -77,7 +77,7 @@ export default class NewClass extends cc.Component {
         this.statusLabel.string = data.status == 1|| data.status == 2 ? '审核中'
             : (data.status == 4 ?'已上架' :'已下架');
         //备注
-        this.RemarksLabel.string = ''
+        this.RemarksLabel.string = data.user_remark ?data.user_remark :'';
 
         data.status == 4 ? this.btn.active = true : '';
 
