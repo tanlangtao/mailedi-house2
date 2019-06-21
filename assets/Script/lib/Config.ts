@@ -25,10 +25,6 @@ export default class Config extends cc.Component {
         }else if(arr.env =='online'){
             this.token = 'e40f01afbb1b9ae3dd6747ced5bca532'
         }
-        if(arr.user_id == arr.proxy_user_id){
-            arr.proxy_user_id = '0';
-        }
-
         return arr;
     }
     //复制内容到剪贴板
