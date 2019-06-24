@@ -132,7 +132,7 @@ export default class NewClass extends cc.Component {
         let url = `${imHost}/transaction`;
         //防止丢失精度
         let scale =Number(this.data.exchange_price)*1000000;
-        let amount = Number(this.amountInput.string)*scale/1000000;
+        let amount =  Number(this.app.UrlData.client != 'desktop'? this.amountLabel.string : this.amountInput.string)*scale/1000000;
 
         this.FormData= new FormData();
         this.FormData.append('user_id',this.app.UrlData.user_id);
