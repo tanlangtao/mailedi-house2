@@ -11,14 +11,6 @@ const {ccclass, property} = cc._decorator;
 
 @ccclass
 export default class NewClass extends cc.Component {
-    @property(cc.EditBox)
-    oldPasswordInput: cc.EditBox = null;
-
-    @property(cc.EditBox)
-    newPasswordInput: cc.EditBox = null;
-
-    @property(cc.EditBox)
-    repeatPasswordInput: cc.EditBox = null;
 
     @property(cc.Label)
     oldPasswordLabel : cc.Label = null;
@@ -42,99 +34,29 @@ export default class NewClass extends cc.Component {
 
     onLoad () {
         this.app = cc.find('Canvas').getComponent('Canvas');
-        this.app.getPublicInput(this.oldPasswordInput,1);
-        this.app.getPublicInput(this.newPasswordInput,1);
-        this.app.getPublicInput(this.repeatPasswordInput,1);
-
-        this.app.setComponent('alertLogin').setMethod('setOldPassword', (text) => this.setOldPassword(text));
-        this.app.setComponent('alertLogin').setMethod('setNewPassword', (text) => this.setNewPassword(text));
-        this.app.setComponent('alertLogin').setMethod('setRepeatPassword', (text) => this.setRepeatPassword(text));
-        //根据当前环境选择使用的输入组件
-        if(this.app.UrlData.client != 'desktop'){
-            this.oldPasswordInput.node.active = false;
-            this.newPasswordInput.node.active = false;
-            this.repeatPasswordInput.node.active = false;
-
-            this.oldPasswordLabel.node.active = true;
-            this.newPasswordLabel.node.active = true;
-            this.repeatPasswordLabel.node.active = true;
-        }else{
-            this.oldPasswordInput.node.active = true;
-            this.newPasswordInput.node.active = true;
-            this.repeatPasswordInput.node.active = true;
-
-            this.oldPasswordLabel.node.active = false;
-            this.newPasswordLabel.node.active = false;
-            this.repeatPasswordLabel.node.active = false;
-        }
     }
 
-    setOldPassword(msg) {
-        let msg2 = this.app.labelType(msg,4);
-        this.oldPasswordLabel.string = msg2 || '(6-10位)';
-        this.setInputColor(msg2,this.oldPasswordLabel);
+    setOldPassword() {
+        this.app.showKeyBoard(this.oldPasswordLabel,4);
     }
 
-    setNewPassword(msg) {
-        let msg2 = this.app.labelType(msg,4);
-        this.newPasswordLabel.string = msg2 || '(6-10位)';
-        this.setInputColor(msg2,this.newPasswordLabel);
+    setNewPassword() {
+        this.app.showKeyBoard(this.newPasswordLabel,4);
     }
 
-    setRepeatPassword(msg) {
-        let msg2 = this.app.labelType(msg,4);
-        this.repeatPasswordLabel.string = msg2 || '(6-10位)';
-        this.setInputColor(msg2,this.repeatPasswordLabel);
-    }
-    setInputColor(msg,input){
-        let color1 = new cc.Color(212, 223, 255);
-        let color2 = new cc.Color(187, 187, 187);
-        //设置字的颜色
-        msg == '' ? input.node.color = color2:input.node.color = color1;
-    }
-    //Label点击回调
-    changeOldLabel(){
-        //此处使用RN 的input组件
-        this.app.Client.send('__oninput', { text: this.oldPasswordLabel.string == '(6-10位)' ? "" :this.oldPasswordLabel.string,
-            component: 'alertLogin', method: 'setOldPassword' })
-    }
-
-    changeNewLabel(){
-        //此处使用RN 的input组件
-        this.app.Client.send('__oninput', { text: this.newPasswordLabel.string == '(6-10位)' ? "" :this.newPasswordLabel.string,
-            component: 'alertLogin', method: 'setNewPassword' })
-    }
-
-    changeRepeatLabel(){
-        //此处使用RN 的input组件
-        this.app.Client.send('__oninput', { text: this.repeatPasswordLabel.string == '(6-10位)' ? "" :this.repeatPasswordLabel.string,
-            component: 'alertLogin', method: 'setRepeatPassword' })
+    setRepeatPassword() {
+        this.app.showKeyBoard(this.repeatPasswordLabel,4);
     }
     onClick(){
-
-        
-        if(this.app.UrlData.client != 'desktop'){
-            if(this.oldPasswordLabel.string == '(6-10位)' || this.newPasswordLabel.string == '(6-10位)'|| this.repeatPasswordLabel.string == '(6-10位)'){
-                this.app.showAlert('密码不能为空!')
-            }else if(this.newPasswordLabel.string.length < 6 || this.newPasswordLabel.string.length > 10){
-                this.app.showAlert('请设置6-10位新密码！')
-            }else if(this.newPasswordLabel.string != this.repeatPasswordLabel.string){
-                this.app.showAlert('两次密码输入不一致！')
-            }else{
-                this.fetchBindAccountPay();
-                this.node.removeFromParent();
-            }
+        if(this.oldPasswordLabel.string == '点击输入' || this.newPasswordLabel.string == '点击输入'|| this.repeatPasswordLabel.string == '点击输入'){
+            this.app.showAlert('密码不能为空!')
+        }else if(this.newPasswordLabel.string.length < 6 || this.newPasswordLabel.string.length > 10){
+            this.app.showAlert('请设置6-10位新密码！')
+        }else if(this.newPasswordLabel.string != this.repeatPasswordLabel.string){
+            this.app.showAlert('两次密码输入不一致！')
         }else{
-            if(this.oldPasswordInput.string == '' || this.newPasswordInput.string == ''|| this.repeatPasswordInput.string == ''){
-                this.app.showAlert('密码不能为空!')
-            }else if(this.newPasswordInput.string.length < 6 || this.newPasswordInput.string.length > 10){
-                this.app.showAlert('请设置6-10位新密码！')
-            }else if(this.newPasswordInput.string != this.repeatPasswordInput.string){
-                this.app.showAlert('两次密码输入不一致！')
-            }else{
-                this.fetchBindAccountPay();
-                this.node.removeFromParent();
-            }
+            this.fetchBindAccountPay();
+            this.node.removeFromParent();
         }
     }
 
@@ -142,8 +64,8 @@ export default class NewClass extends cc.Component {
         var url = `${this.app.UrlData.host}/api/user_funds_password/updatePassword`;
         this.FormData= new FormData();
         this.FormData.append('user_id',this.app.UrlData.user_id)
-        this.FormData.append('old_password',this.app.UrlData.client != 'desktop'? this.oldPasswordLabel.string : this.oldPasswordInput.string);
-        this.FormData.append('password',this.app.UrlData.client != 'desktop' ? this.newPasswordLabel.string :this.newPasswordInput.string);
+        this.FormData.append('old_password', this.oldPasswordLabel.string);
+        this.FormData.append('password',this.newPasswordLabel.string);
         this.FormData.append('token',this.app.token);
         fetch(url,{
             method:'POST',
@@ -158,30 +80,18 @@ export default class NewClass extends cc.Component {
         })
     }
     deleteOld(){
-        if(this.app.UrlData.client != 'desktop'){
-            this.oldPasswordLabel.string = '(6-10位)';
-            this.setInputColor('',this.oldPasswordLabel);
-        }else{
-            this.oldPasswordInput.string = '';
-        }
+        this.oldPasswordLabel.string = '点击输入';
+        this.app.setInputColor('',this.oldPasswordLabel);
     }
 
     deleteNew(){
-        if(this.app.UrlData.client != 'desktop'){
-            this.newPasswordLabel.string = '(6-10位)';
-            this.setInputColor('',this.newPasswordLabel);
-        }else{
-            this.newPasswordInput.string = '';
-        }
+        this.newPasswordLabel.string = '点击输入';
+        this.app.setInputColor('',this.newPasswordLabel);
     }
 
     deleteRepeat(){
-        if(this.app.UrlData.client != 'desktop'){
-            this.repeatPasswordLabel.string = '(6-10位)';
-            this.setInputColor('',this.repeatPasswordLabel);
-        }else{
-            this.repeatPasswordInput.string = '';
-        }
+        this.repeatPasswordLabel.string = '点击输入';
+        this.app.setInputColor('',this.repeatPasswordLabel);
     }
     
     removeSelf(){

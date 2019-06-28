@@ -16,12 +16,6 @@ export default class NewClass extends cc.Component {
     @property(cc.Label)
     goldLabel: cc.Label = null;
 
-    @property(cc.EditBox)
-    idInput: cc.EditBox = null;
-
-    @property(cc.EditBox)
-    amountInput: cc.EditBox = null;
-
     @property(cc.Label)
     czArea: cc.Label = null;
 
@@ -48,58 +42,15 @@ export default class NewClass extends cc.Component {
     onLoad () {
         this.app = cc.find('Canvas').getComponent('Canvas');
 
-        this.app.getPublicInput(this.amountInput,1);
-        this.app.getPublicInput(this.idInput,1);
-
         this.fetchIndex();
-
-        this.app.setComponent('alertLogin').setMethod('setAmount', (text) => this.setAmount(text));
-        this.app.setComponent('alertLogin').setMethod('setId', (text) => this.setId(text));
-        //根据当前环境选择使用的输入组件
-        if(this.app.UrlData.client != 'desktop'){
-            this.amountInput.node.active = false;
-            this.idInput.node.active = false;
-
-            this.idLabel.node.active = true;
-            this.amountLabel.node.active = true;
-        }else{
-            this.amountInput.node.active = true;
-            this.idInput.node.active = true;
-
-            this.idLabel.node.active = false;
-            this.amountLabel.node.active = false;
-        }
     }
 
-    setAmount(msg) {
-        let msg2 = this.app.labelType(msg,1);
-        this.amountLabel.string = msg2 || '输入金额';
-        this.setInputColor(msg2,this.amountLabel);
+    setAmount() {
+        this.app.showKeyBoard(this.amountLabel,1);
     }
 
-    setId(msg) {
-        let msg2 = this.app.labelType(msg,4);
-        this.idLabel.string = msg2 || '输入ID';
-        this.setInputColor(msg2,this.idLabel);
-    }
-
-    setInputColor(msg,input){
-        let color1 = new cc.Color(212, 223, 255);
-        let color2 = new cc.Color(187, 187, 187);
-        //设置字的颜色
-        msg == '' ? input.node.color = color2:input.node.color = color1;
-    }
-    //Label点击回调
-    changeAmountLabel(){
-        //此处使用RN 的input组件
-        this.app.Client.send('__oninput', { text: this.amountLabel.string == '输入金额' ? "" :this.amountLabel.string,
-            component: 'alertLogin', method: 'setAmount' })
-    }
-
-    changeIdLabel(){
-        //此处使用RN 的input组件
-        this.app.Client.send('__oninput', { text: this.idLabel.string == '输入ID' ? "" :this.idLabel.string,
-            component: 'alertLogin', method: 'setId' })
+    setId() {
+        this.app.showKeyBoard(this.idLabel,4);
     }
 
     public fetchIndex(){
@@ -145,8 +96,8 @@ export default class NewClass extends cc.Component {
         this.FormData= new FormData();
         this.FormData.append('user_id',this.app.UrlData.user_id)
         this.FormData.append('user_name',decodeURI(this.app.UrlData.user_name))
-        this.FormData.append('amount',this.app.UrlData.client != 'desktop'? this.amountLabel.string :this.amountInput.string);
-        this.FormData.append('by_id',this.app.UrlData.client != 'desktop'? this.idLabel.string :this.idInput.string);
+        this.FormData.append('amount', this.amountLabel.string );
+        this.FormData.append('by_id',this.idLabel.string);
         this.FormData.append('by_name',this.searchData.data.game_nick)
         this.FormData.append('client',this.app.UrlData.client)
         this.FormData.append('proxy_user_id',this.app.UrlData.proxy_user_id)
@@ -192,28 +143,20 @@ export default class NewClass extends cc.Component {
     }
 
     deleteAmount(){
-        if(this.app.UrlData.client != 'desktop'){
-            this.amountLabel.string = '输入金额';
-            this.setInputColor('',this.amountLabel);
-        }else{
-            this.amountInput.string = '';
-        }
+        this.amountLabel.string = '点击输入';
+        this.app.setInputColor('',this.amountLabel);
     }
 
     deleteId() {
-        if(this.app.UrlData.client != 'desktop'){
-            this.idLabel.string = '输入ID';
-            this.setInputColor('',this.idLabel);
-        }else{
-            this.idInput.string = '';
-        }
+            this.idLabel.string = '点击输入';
+            this.app.setInputColor('',this.idLabel);
     }
 
     showGiveUserAlert(){
         var node = cc.instantiate(this.GiveUserAlert);
         var canvas = cc.find('Canvas');
 
-        var url = `${this.app.UrlData.host}/api/give/searchByUser?by_id=${this.idInput.string}&token=${this.app.token}`;
+        var url = `${this.app.UrlData.host}/api/give/searchByUser?by_id=${this.idLabel.string}&token=${this.app.token}`;
         fetch(url,{
             method:'get'
         }).then((data)=>data.json()).then((data)=>{
@@ -222,7 +165,7 @@ export default class NewClass extends cc.Component {
                 canvas.addChild(node);
                 node.getComponent('GiveUserAlert').init({
                     data:data.data,
-                    gold:this.amountInput.string,
+                    gold:this.amountLabel.string,
                     parentComponent:this
                 })
             }else{
@@ -233,46 +176,24 @@ export default class NewClass extends cc.Component {
     }
 
     onClick(){
-        if(this.app.UrlData.client != 'desktop'){
-            var amount = Number(this.amountLabel.string);
-            let given = this.data.data;
-            var minAmount = Number(given.min_amount);
-            var maxAmount = Number(given.max_amount);
-            if(this.data.data.is_password == 0){
-                this.app.showAlert('请先设置资金密码!')
-            }else if(this.idLabel.string =='输入ID'){
-                this.app.showAlert('赠送ID不能为空！')
-            }else if(this.amountLabel.string == '输入金额'){
-                this.app.showAlert('赠送金额不能为空！')
-            }else if(amount % minAmount != 0){
-                this.app.showAlert(`赠送金额必须是${minAmount}的倍数!`)
-            }else if(amount > this.data.data.game_gold){
-                this.app.showAlert(`赠送金额不能大于金币余额!`)
-            }else if(amount < minAmount || amount >maxAmount){
-                this.app.showAlert('超出赠送范围!')
-            }else{
-                this.showGiveUserAlert();
-            }
+        var amount = Number(this.amountLabel.string);
+        let given = this.data.data;
+        var minAmount = Number(given.min_amount);
+        var maxAmount = Number(given.max_amount);
+        if(this.data.data.is_password == 0){
+            this.app.showAlert('请先设置资金密码!')
+        }else if(this.idLabel.string =='点击输入'){
+            this.app.showAlert('赠送ID不能为空！')
+        }else if(this.amountLabel.string == '点击输入'){
+            this.app.showAlert('赠送金额不能为空！')
+        }else if(amount % minAmount != 0){
+            this.app.showAlert(`赠送金额必须是${minAmount}的倍数!`)
+        }else if(amount > this.data.data.game_gold){
+            this.app.showAlert(`赠送金额不能大于金币余额!`)
+        }else if(amount < minAmount || amount >maxAmount){
+            this.app.showAlert('超出赠送范围!')
         }else{
-            var amount = Number(this.amountInput.string);
-            let given = this.data.data;
-            var minAmount = Number(given.min_amount);
-            var maxAmount = Number(given.max_amount);
-            if(this.data.data.is_password == 0){
-                this.app.showAlert('请先设置资金密码!')
-            }else if(this.idInput.string ==''){
-                this.app.showAlert('赠送ID不能为空！')
-            }else if(this.amountInput.string == ''){
-                this.app.showAlert('赠送金额不能为空！')
-            }else if(amount % minAmount != 0){
-                this.app.showAlert(`赠送金额必须是${minAmount}的倍数!`)
-            }else if(amount > this.data.data.game_gold){
-                this.app.showAlert(`赠送金额不能大于金币余额!`)
-            }else if(amount < minAmount || amount >maxAmount){
-                this.app.showAlert('超出赠送范围!')
-            }else{
-                this.showGiveUserAlert();
-            }
+            this.showGiveUserAlert();
         }
     }
     // update (dt) {}

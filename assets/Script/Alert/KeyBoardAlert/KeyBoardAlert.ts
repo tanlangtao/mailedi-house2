@@ -13,88 +13,92 @@ const {ccclass, property} = cc._decorator;
 @ccclass
 export default class NewClass extends cc.Component {
 
-    // @property(cc.Label)
-    // label: cc.Label = null;
+    @property(cc.Label)
+    inputlabel: cc.Label = null;
+
+   
+
+    @property(cc.Node)
+    lowerContent :cc.Node = null;
+
+    @property(cc.Node)
+    CapContent :cc.Node = null;
 
     @property
     label = null;
-    // LIFE-CYCLE CALLBACKS:
-
-    init(label){
-
-        if(label.string == '点击输入'){
-            label.string = ''
-        }
+    isCap = false;
+    type = null;
+    app = null;
+    init(label,type){
         this.label = label;
+        if(label.string == '点击输入'){
+            this.inputlabel.string = '';
+        }else{
+            this.inputlabel.string = label.string;
+        }
+        
+        this.type = type;
     }
 
-    setInputColor(msg,input){
-        let color1 = new cc.Color(212, 223, 255);
-        let color2 = new cc.Color(187, 187, 187);
-        //设置字的颜色
-        msg == '' ? input.node.color = color2:input.node.color = color1;
+    onLoad(){
+        this.app = cc.find('Canvas').getComponent('Canvas');
+        this.CapContent.active = false;
+        let dom = document.getElementById('GameCanvas');
+        let self = this;
+        dom.onkeydown = (e)=>{
+            if(e.key.length>1){
+                switch(e.key){
+                    case 'Backspace':
+                        self.deleteString();
+                        break;
+                    case 'Enter':
+                        self.onClick();
+                        break;
+                    default:
+                        break;
+                }
+            }else{
+                self.inputlabel.string = self.inputlabel.string+e.key
+            }
+        }
     }
-
     add1(e){
-        this.label.string = this.label.string+'1';
-        this.setInputColor('1',this.label)
+        let font  = e.target.children[0].getComponent(cc.Label).string;
+        this.inputlabel.string = this.inputlabel.string+font;
     }
-    add2(e){
-        this.label.string = this.label.string+'2';
-        this.setInputColor('1',this.label)
-    }
-    add3(e){
-        this.label.string = this.label.string+'3';
-        this.setInputColor('1',this.label)
+    deleteString(){
+        this.inputlabel.string = this.inputlabel.string.substr(0,this.inputlabel.string.length-1);
     }
 
-    add4(e){
-        this.label.string = this.label.string+'4';
-        this.setInputColor('1',this.label)
+    deleteAll(e){
+        this.inputlabel.string ='';
     }
 
-    add5(e){
-        this.label.string = this.label.string+'5';
-        this.setInputColor('1',this.label)
-    }
-
-    add6(e){
-        this.label.string = this.label.string+'6';
-        this.setInputColor('1',this.label)
-    }
-
-    add7(e){
-        this.label.string = this.label.string+'7';
-        this.setInputColor('1',this.label)
-    }
-
-    add8(e){
-        this.label.string = this.label.string+'8';
-        this.setInputColor('1',this.label)
-    }
-    add9(e){
-        this.label.string = this.label.string+'9';
-        this.setInputColor('1',this.label)
-    }
-    add0(e){
-        this.label.string = this.label.string+'0';
-        this.setInputColor('1',this.label)
-    }
-    addDian(e){
-        this.label.string = this.label.string+'.';
-        this.setInputColor('1',this.label)
-    }
-    deleteString(e){
-        this.label.string = this.label.string.substr(0,this.label.string.length-1);
-        this.setInputColor('1',this.label)
-
+    toCap(){
+        if(this.isCap){
+            this.CapContent.active = false;
+            this.lowerContent.active = true;
+            this.isCap = false;
+        }else{
+            this.CapContent.active = true;
+            this.lowerContent.active = false;
+            this.isCap = true;
+        }
     }
 
     onClick(){
-        if(this.label.string.length == 0){
-            this.label.string = '点击输入';
-            this.setInputColor('',this.label)
+        let string = this.app.labelType(this.inputlabel.string,this.type);
+        if(string == ''){
+            string = '点击输入'
+            this.app.setInputColor('',this.label)
+        }else{
+            this.app.setInputColor('2',this.label)
         }
+        this.label.string = string;
+        this.node.removeFromParent();
+    }
+
+    removeSelf(){
         this.node.removeFromParent();
     }
 }

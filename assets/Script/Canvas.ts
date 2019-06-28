@@ -75,6 +75,9 @@ export default class NewClass extends cc.Component {
     @property(cc.Node)
     content : cc.Node = null;
 
+    @property(cc.Prefab)
+    keyBoardAlert : cc.Prefab = null;
+
     @property()
     public UrlData : any = [];
     public Client  = null;
@@ -419,7 +422,7 @@ export default class NewClass extends cc.Component {
         }else if(type == 4){
 
             //验证input,密码
-            msg  = e.replace(/[^\d]/g, '');
+            // msg  = e.replace(/[^\d]/g, '');
             msg = msg.substring(0,10)
         }else if(type == 5){
             //验证input type = 5 不能输入特殊字符,保留20位
@@ -430,6 +433,18 @@ export default class NewClass extends cc.Component {
             msg  = e.replace(/[^\d]/g, '').replace(/^0{1,}/g, '').substring(0,19);
         }
         return msg
+    }
+    public showKeyBoard(label,type){
+        var node = cc.instantiate(this.keyBoardAlert);
+        this.node.addChild(node);
+        node.getComponent('KeyBoardAlert').init(label,type)
+    }
+
+    setInputColor(msg,input){
+        let color1 = new cc.Color(212, 223, 255);
+        let color2 = new cc.Color(187, 187, 187);
+        //设置字的颜色
+        msg == '' ? input.node.color = color2:input.node.color = color1;
     }
 
 }

@@ -13,11 +13,6 @@ const {ccclass, property} = cc._decorator;
 
 @ccclass
 export default class NewClass extends cc.Component {
-
-
-    @property(cc.EditBox)
-    amountInput: cc.EditBox = null;
-
     @property(cc.Label)
     amountLabel : cc.Label = null;
 
@@ -34,60 +29,20 @@ export default class NewClass extends cc.Component {
 
     onLoad () {
         this.app = cc.find('Canvas').getComponent('Canvas');
-        this.app.getPublicInput(this.amountInput,1);
-
-        this.app.setComponent('alertLogin').setMethod('setAmount', (text) => this.setAmount(text));
-         //根据当前环境选择使用的输入组件
-         if(this.app.UrlData.client != 'desktop'){
-            this.amountInput.node.active = false;
-            this.amountLabel.node.active = true;
-        }else{
-            this.amountInput.node.active = true;
-            this.amountLabel.node.active = false;
-        }
     }
-    setAmount(msg) {
-        let msg2 = this.app.labelType(msg,1);
-        this.amountLabel.string = msg2 || '请输入金额';
-        this.setInputColor(msg2,this.amountLabel);
-    }
-
-    setInputColor(msg,input){
-        let color1 = new cc.Color(212, 223, 255);
-        let color2 = new cc.Color(187, 187, 187);
-        //设置字的颜色
-        msg == '' ? input.node.color = color2:input.node.color = color1;
-    }
-    //amoutLabel点击回调
-    changeAccountLabel(){
-        //此处使用RN 的input组件
-        this.app.Client.send('__oninput', { text: this.amountLabel.string == '请输入金额' ? "" :this.amountLabel.string,
-            component: 'alertLogin', method: 'setAmount' })
+    setAmount() {
+        this.app.showKeyBoard(this.amountLabel,1);
     }
 
     onClick(){
-        if(this.app.UrlData.client != 'desktop'){
-            if(Number(this.data.min_gold) >Number(this.amountLabel.string)){
-                this.app.showAlert('小于最低交易额!')
-            }else if(Number(this.data.last_gold) < Number(this.amountLabel.string)){
-                this.app.showAlert('当前上架金币不足！')
-            }else if( this.amountLabel.string == '请输入金额'){
-                this.app.showAlert('输入不能为空!')
-            }else{
-                this.fetchCheckOrder();
-
-            }
+        if(Number(this.data.min_gold) >Number(this.amountLabel.string)){
+            this.app.showAlert('小于最低交易额!')
+        }else if(Number(this.data.last_gold) < Number(this.amountLabel.string)){
+            this.app.showAlert('当前上架金币不足！')
+        }else if( this.amountLabel.string == '点击输入'){
+            this.app.showAlert('输入不能为空!')
         }else{
-            if(Number(this.data.min_gold) >Number(this.amountInput.string)){
-                this.app.showAlert('小于最低交易额!')
-            }else if(Number(this.data.last_gold) < Number(this.amountInput.string)){
-                this.app.showAlert('当前上架金币不足！')
-            }else if( this.amountInput.string == ''){
-                this.app.showAlert('输入不能为空!')
-            }else{
-                this.fetchCheckOrder();
-
-            }
+            this.fetchCheckOrder();
         }
     }
     fetchCheckOrder(){
@@ -98,7 +53,6 @@ export default class NewClass extends cc.Component {
             if(data.status == 0){
                 //判断是否存在订单
                 if(data.data.is_exist == 0){
-                    console.log('111')
                     this.fetchVeify();
                 }else{
                     this.app.showCancleAlert(data.data);
@@ -132,14 +86,14 @@ export default class NewClass extends cc.Component {
         let url = `${imHost}/transaction`;
         //防止丢失精度
         let scale =Number(this.data.exchange_price)*1000000;
-        let amount =  Number(this.app.UrlData.client != 'desktop'? this.amountLabel.string : this.amountInput.string)*scale/1000000;
+        let amount =  Number( this.amountLabel.string)*scale/1000000;
 
         this.FormData= new FormData();
         this.FormData.append('user_id',this.app.UrlData.user_id);
         this.FormData.append('user_name',decodeURI(this.app.UrlData.user_name));
         this.FormData.append('replace_id',this.data.user_id);
         this.FormData.append('replace_name',this.data.user_name);
-        this.FormData.append('gold',this.app.UrlData.client != 'desktop'? this.amountLabel.string : this.amountInput.string);
+        this.FormData.append('gold',this.amountLabel.string );
         this.FormData.append('amount',`${amount}`);
         this.FormData.append('sell_id',this.data.id);
         this.FormData.append('exchange_price',this.data.exchange_price);
@@ -169,13 +123,8 @@ export default class NewClass extends cc.Component {
     }
 
     deleteAmount(){
-        this.amountInput.string ='';
-        if(this.app.UrlData.client != 'desktop'){
-            this.amountLabel.string = '请输入金额';
-            this.setInputColor('',this.amountLabel);
-        }else{
-            this.amountInput.string = '';
-        }
+        this.amountLabel.string = '点击输入';
+        this.app.setInputColor('',this.amountLabel);
     }
     
     removeSelf(){

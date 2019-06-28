@@ -19,9 +19,6 @@ export default class NewClass extends cc.Component {
     @property(cc.Prefab)
     GiveItem: cc.Prefab = null;
 
-    @property(cc.EditBox)
-    idInput: cc.EditBox = null;
-
     @property(cc.Label)
     selectLabel: cc.Label = null;
 
@@ -58,37 +55,11 @@ export default class NewClass extends cc.Component {
 
         this.initRender();
 
-        this.app.getPublicInput(this.idInput,1);
-
         this.fetchIndex();
-        this.app.setComponent('alertLogin').setMethod('setId', (text) => this.setId(text));
-        //根据当前环境选择使用的输入组件
-        if(this.app.UrlData.client != 'desktop'){
-            this.idInput.node.active = false;
-            this.idLabel.node.active = true;
-        }else{
-            this.idInput.node.active = true;
-            this.idLabel.node.active = false;
-        }
     }
 
-    setId(msg) {
-        let msg2 = this.app.labelType(msg,4);
-        this.idLabel.string = msg2 || '输入ID查询';
-        this.setInputColor(msg2,this.idLabel);
-    }
-
-    setInputColor(msg,input){
-        let color1 = new cc.Color(212, 223, 255);
-        let color2 = new cc.Color(187, 187, 187);
-        //设置字的颜色
-        msg == '' ? input.node.color = color2:input.node.color = color1;
-    }
-
-    changeIdLabel(){
-        //此处使用RN 的input组件
-        this.app.Client.send('__oninput', { text: this.idLabel.string == '输入ID查询' ? "" :this.idLabel.string,
-            component: 'alertLogin', method: 'setId' })
+    setId() {
+        this.app.showKeyBoard(this.idLabel,4);
     }
 
     selectClick() {
@@ -111,12 +82,7 @@ export default class NewClass extends cc.Component {
 
     public fetchIndex() {
 
-         if(this.app.UrlData.client != 'desktop'){
-            var url = `${this.app.UrlData.host}/api/give/myGiveList?type=2&user_id=${this.app.UrlData.user_id}&given_id=${this.idLabel.string == '' ? '0' :this.idLabel.string}&page=${this.page}&page_set=5&token=${this.app.token}`;
-        }else{
-            var url = `${this.app.UrlData.host}/api/give/myGiveList?type=2&user_id=${this.app.UrlData.user_id}&given_id=${this.idInput.string == '' ? '0' :this.idInput.string}&page=${this.page}&page_set=5&token=${this.app.token}`;
-        }
-
+        var url = `${this.app.UrlData.host}/api/give/myGiveList?type=1&user_id=${this.app.UrlData.user_id}&given_id=${this.idLabel.string == '点击输入' ? '0' :this.idLabel.string}&page=${this.page}&page_set=5&token=${this.app.token}&status=${this.current}`;
         fetch(url, {
             method: 'get'
         }).then((data) => data.json()).then((data) => {
@@ -156,12 +122,8 @@ export default class NewClass extends cc.Component {
 
     }
     deleteId(){
-        if(this.app.UrlData.client != 'desktop'){
-            this.idLabel.string = '输入ID查询';
-            this.setInputColor('',this.idLabel);
-        }else{
-            this.idInput.string = '';
-        }
+        this.idLabel.string = '点击输入';
+        this.app.setInputColor('',this.idLabel);
     }
 
     pageUp(){
