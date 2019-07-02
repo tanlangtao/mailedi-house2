@@ -87,7 +87,7 @@ export default class NewClass extends cc.Component {
                 this.sell_gold = data.data;
                 this.areaLabel1.string = `范围(${data.data.min_amount}-${data.data.max_amount})`
                 this.areaLabel2.string = `范围(${data.data.min_exchange_price}-${data.data.max_exchange_price})`
-                this.areaLabel3.string = `范围(>=${data.data.min_exchange_gold})`
+                this.areaLabel3.string = `范围(${data.data.min_exchange_gold}-${data.data.max_exchange_gold})`
             } else {
                 this.app.showAlert(data.msg)
             }
@@ -167,6 +167,7 @@ export default class NewClass extends cc.Component {
             let minPrice = Number(this.sell_gold.min_exchange_price);
             let maxPrice = Number(this.sell_gold.max_exchange_price);
             let minSill = Number(this.sell_gold.min_exchange_gold);
+            let maxSill = Number(this.sell_gold.max_exchange_gold);
             //剩余金币
             let gameGold = Number(this.app.game_gold);
             if(this.amountLabel.string == '点击输入'||this.priceLabel.string == '点击输入'||this.sillLabel.string =='点击输入'){
@@ -181,7 +182,7 @@ export default class NewClass extends cc.Component {
                 this.app.showAlert('金币不符合范围');
             }else if(price > maxPrice || price < minPrice){
                 this.app.showAlert('单价不符合范围');
-            }else if(sill < minSill){
+            }else if(sill < minSill || sill > maxSill){
                 this.app.showAlert('最低交易额不符合范围！');
             }else{
                 this.submitSellGoldInfo();
