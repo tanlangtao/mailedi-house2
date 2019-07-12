@@ -38,12 +38,13 @@ export default class NewClass extends cc.Component {
     @property(cc.Label)
     accountLabel : cc.Label = null;
 
+
     @property()
     FormData = new FormData();
     public app = null;
     public action = null;
     public  itemId = null;
-
+    public pay_url = '';
     public init(data){
         this.action = data.action;
         this.itemId = data.itemId;
@@ -64,6 +65,8 @@ export default class NewClass extends cc.Component {
 
     onLoad () {
         this.app = cc.find('Canvas').getComponent('Canvas');
+        this.app.config.uploadImg();
+
         this.app.getPublicInput(this.firstNameInput,2);
         this.app.getPublicInput(this.lastNameInput,2);
         this.app.getPublicInput(this.accountInput,1);
@@ -143,7 +146,6 @@ export default class NewClass extends cc.Component {
 
 
     onClick(){
-
         if(this.app.UrlData.client != 'desktop'){
             if(this.accountLabel.string == '请输入账号'
                 || this.firstNameLabel.string == ''
@@ -152,7 +154,7 @@ export default class NewClass extends cc.Component {
                 this.app.showAlert('输入不能为空!')
             }else{
                 this.fetchBindAccountPay();
-                this.node.removeFromParent();
+                this.removeSelf();
             }
         }else{
             if(this.accountInput.string == ''
@@ -162,7 +164,7 @@ export default class NewClass extends cc.Component {
                 this.app.showAlert('输入不能为空!')
             }else{
                 this.fetchBindAccountPay();
-                this.node.removeFromParent();
+                this.removeSelf();
             }
         }
     }
@@ -178,7 +180,7 @@ export default class NewClass extends cc.Component {
                 account_surname:this.firstNameLabel.string,
                 account_first_name:this.lastNameLabel.string,
                 account_name:this.nameLabel.string,
-                pay_url:'',
+                pay_url:this.pay_url,
             };
         }else{
             obj = {
@@ -186,8 +188,7 @@ export default class NewClass extends cc.Component {
                 account_surname:this.firstNameInput.string,
                 account_first_name:this.lastNameInput.string,
                 account_name:this.nameLabel.string,
-
-                pay_url:'',
+                pay_url:this.pay_url,
             };
         }
         let info = JSON.stringify(obj);
@@ -203,6 +204,7 @@ export default class NewClass extends cc.Component {
         this.FormData.append('proxy_name', decodeURI(this.app.UrlData.proxy_name))
         this.FormData.append('package_id', this.app.UrlData.package_id)
         this.FormData.append('token',this.app.token);
+        this.FormData.append('version',this.app.version);
         if(this.action == 'edit'){
             this.FormData.append('id',this.itemId);
         }
@@ -255,7 +257,45 @@ export default class NewClass extends cc.Component {
     }
     
     removeSelf(){
-        this.node.destroy();
+        let input :any = document.getElementById('imgInput');
+        let dom = document.getElementById('Cocos2dGameContainer');
+        dom.removeChild(input);
+        this.node.removeFromParent();
     }
-    // update (dt) {}
+    
+    uploadImg(){
+        let self = this;
+        let input :any = document.getElementById('imgInput');
+        let newscript = document.createElement("script");
+        newscript.src='../../lib/qrcode.js';
+        if(input.files.length<=0){
+            this.app.showAlert('请先选择图片！')
+        }else{
+            qrcode.decode(this.getObjectURL(input.files[0]));
+            qrcode.callback = function(imgMsg){
+                //判断是否包含微信或支付宝子串
+                imgMsg  = imgMsg.toUpperCase();
+                if(imgMsg.indexOf('QR.ALIPAY.COM')>= 0 ||imgMsg.indexOf('WXP')>= 0 ){
+                    self.app.showAlert('二维码上传成功！',imgMsg)
+                    self.pay_url = imgMsg;
+                }else{
+                    self.app.showAlert('请选择正确的二维码上传！')
+                }
+                console.log(imgMsg)
+            }
+        }
+       
+    }
+     getObjectURL = function(file){
+        var url = null ; 
+        url = window.URL.createObjectURL(file) ;
+        // if (window.createObjectURL!=undefined) { // basic
+        //     url = window.createObjectURL(file) ;
+        // } else if (window.URL!=undefined) { // mozilla(firefox)
+        //     url = window.URL.createObjectURL(file) ;
+        // } else if (window.webkitURL!=undefined) { // webkit or chrome
+        //     url = window.webkitURL.createObjectURL(file) ;
+        // }
+        return url;
+    }
 }

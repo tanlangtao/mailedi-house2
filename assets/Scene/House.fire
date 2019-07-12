@@ -41,8 +41,8 @@
     },
     "_scale": {
       "__type__": "cc.Vec3",
-      "x": 0.7033203125,
-      "y": 0.7033203125,
+      "x": 0.6487676056338028,
+      "y": 0.6487676056338028,
       "z": 1
     },
     "_quat": {
@@ -3794,7 +3794,7 @@
   {
     "__type__": "cc.Node",
     "_name": "New Label",
-    "_objFlags": 512,
+    "_objFlags": 0,
     "_parent": {
       "__id__": 100
     },
@@ -4929,8 +4929,8 @@
     },
     "_enabled": true,
     "_useOriginalSize": false,
-    "_string": "1.25",
-    "_N$string": "1.25",
+    "_string": "1.27",
+    "_N$string": "1.27",
     "_fontSize": 20,
     "_lineHeight": 40,
     "_enableWrapText": true,
@@ -5040,7 +5040,7 @@
       "__uuid__": "e53fcf9e-1512-4817-976d-e243b21ccab1"
     },
     "AlipayAccountAlert": {
-      "__uuid__": "53e3e4a7-b4e3-4025-b9f4-9c47e8adda0f"
+      "__uuid__": "8f85dca6-01b9-44bb-9287-ecc968caa503"
     },
     "BankAccountAlert": {
       "__uuid__": "1781e88a-d029-4b7f-bc65-bedc77091a46"

@@ -42,6 +42,7 @@ export default class NewClass extends cc.Component {
         this.FormData.append('user_id',this.app.UrlData.user_id);
         this.FormData.append('order_id', this.data.order_id);
         this.FormData.append('token',this.app.token);
+        this.FormData.append('version',this.app.version);
         fetch(url,{
             method:'POST',
             body:this.FormData

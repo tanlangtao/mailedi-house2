@@ -55,7 +55,7 @@ export default class NewClass extends cc.Component {
 
     public fetchIndex(){
         this.idx = this.idx +1;
-        var url = `${this.app.UrlData.host}/api/give/index?user_id=${this.app.UrlData.user_id}&token=${this.app.token}`;
+        var url = `${this.app.UrlData.host}/api/give/index?user_id=${this.app.UrlData.user_id}&token=${this.app.token}&version=${this.app.version}`;
         fetch(url,{
             method:'get'
         }).then((data)=>data.json()).then((data)=>{
@@ -104,6 +104,7 @@ export default class NewClass extends cc.Component {
         this.FormData.append('proxy_name',decodeURI(this.app.UrlData.proxy_name))
         this.FormData.append('package_id',this.app.UrlData.package_id)
         this.FormData.append('token',this.app.token)
+        this.FormData.append('version',this.app.version);
         fetch(url,{
             method:'POST',
             body:this.FormData
@@ -119,7 +120,11 @@ export default class NewClass extends cc.Component {
 
     accNumClick(){
         if(this.app.is_password == 1){
-            this.app.showTestPasswordAlert(1)
+            if(this.app.isTestPassworld){
+                this.app.showAccNum();
+            }else{
+                this.app.showTestPasswordAlert(1)
+            }
         }else if (this.app.is_password == 0){
             this.app.showSetPasswordAlert(this)
         }
@@ -156,7 +161,7 @@ export default class NewClass extends cc.Component {
         var node = cc.instantiate(this.GiveUserAlert);
         var canvas = cc.find('Canvas');
 
-        var url = `${this.app.UrlData.host}/api/give/searchByUser?by_id=${this.idLabel.string}&token=${this.app.token}`;
+        var url = `${this.app.UrlData.host}/api/give/searchByUser?by_id=${this.idLabel.string}&token=${this.app.token}&version=${this.app.version}`;
         fetch(url,{
             method:'get'
         }).then((data)=>data.json()).then((data)=>{

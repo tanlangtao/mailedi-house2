@@ -196,6 +196,7 @@ export default class NewClass extends cc.Component {
         this.FormData.append('proxy_name', decodeURI(this.app.UrlData.proxy_name))
         this.FormData.append('package_id', this.app.UrlData.package_id)
         this.FormData.append('token',this.app.token);
+        this.FormData.append('version',this.app.version);
         if(this.action == 'edit'){
             this.FormData.append('id',this.itemId);
         }

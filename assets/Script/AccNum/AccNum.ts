@@ -29,7 +29,7 @@ export default class NewClass extends cc.Component {
 
     public fetchIndex() {
 
-        let url = `${this.app.UrlData.host}/api/payment_account/accountInfo?user_id=${this.app.UrlData.user_id}&token=${this.app.token}`;
+        let url = `${this.app.UrlData.host}/api/payment_account/accountInfo?user_id=${this.app.UrlData.user_id}&token=${this.app.token}&version=${this.app.version}`;
         fetch(url, {
             method: 'get'
         }).then((data) => data.json()).then((data) => {

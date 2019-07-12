@@ -77,7 +77,7 @@ export default class NewClass extends cc.Component {
     }
 
     public fetchIndex() {
-        var url = `${this.app.UrlData.host}/api/give/myGiveList?type=2&user_id=${this.app.UrlData.user_id}&given_id=${this.idLabel.string == '点击输入' ? '0' :this.idLabel.string}&page=${this.page}&page_set=5&token=${this.app.token}`;
+        var url = `${this.app.UrlData.host}/api/give/myGiveList?type=2&user_id=${this.app.UrlData.user_id}&given_id=${this.idLabel.string == '点击输入' ? '0' :this.idLabel.string}&page=${this.page}&page_set=5&token=${this.app.token}&version=${this.app.version}`;
 
 
         fetch(url, {

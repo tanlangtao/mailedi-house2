@@ -96,6 +96,7 @@ export default class NewClass extends cc.Component {
     _component: any = {};
     //验证密码
     isTestPassworld = false;
+    public version = 1 ;
 
     protected onLoad(): void {
         this.config = new Config();
@@ -138,7 +139,7 @@ export default class NewClass extends cc.Component {
     }
 
     getBlacklist (){
-        let url = `${this.UrlData.host}/api/backend/findUserBlackList?user_id=${this.UrlData.user_id}&token=${this.token}&type=1`;
+        let url = `${this.UrlData.host}/api/backend/findUserBlackList?user_id=${this.UrlData.user_id}&token=${this.token}&type=1&version=${this.version}`;
         fetch(url,{
             method:'get'
         }).then((data)=>data.json()).then((data)=>{
@@ -169,7 +170,7 @@ export default class NewClass extends cc.Component {
     }
     public fetchIndex(){
         this.idx = this.idx +1;
-        let url = `${this.UrlData.host}/api/give/index?user_id=${this.UrlData.user_id}&token=${this.token}`;
+        let url = `${this.UrlData.host}/api/give/index?user_id=${this.UrlData.user_id}&token=${this.token}&version=${this.version}`;
         fetch(url,{
             method:'get'
         }).then((data)=>data.json()).then((data)=>{
@@ -193,7 +194,7 @@ export default class NewClass extends cc.Component {
         })
 
         //请求支付信息
-        url = `${this.UrlData.host}/api/payment_account/accountInfo?user_id=${this.UrlData.user_id}&token=${this.token}`;
+        url = `${this.UrlData.host}/api/payment_account/accountInfo?user_id=${this.UrlData.user_id}&token=${this.token}&version=${this.version}`;
         fetch(url, {
             method: 'get'
         }).then((data) => data.json()).then((data) => {

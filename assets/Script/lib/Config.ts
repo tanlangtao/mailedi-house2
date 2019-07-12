@@ -29,7 +29,7 @@ export default class Config extends cc.Component {
     }
     //复制内容到剪贴板
     public copyToClipBoard(str) {
-        var app = cc.find('Canvas/Main').getComponent('Main');
+        var app = cc.find('Canvas').getComponent('Canvas');
         if(document.execCommand){
             try
             {
@@ -37,7 +37,7 @@ export default class Config extends cc.Component {
                 input.readOnly = true;
                 input.value = str;
                 document.body.appendChild(input);
-                input.select();
+                this.selectText(input,0,str.length);
                 input.setSelectionRange(0, input.value.length);
                 document.execCommand("Copy");
                 document.body.removeChild(input);
@@ -50,6 +50,18 @@ export default class Config extends cc.Component {
             app.showAlert(`无法使用复制，请升级系统！`);
         }
 
+    }
+    selectText(textbox, startIndex, stopIndex) {
+        if(textbox.createTextRange) {//ie
+            var range = textbox.createTextRange();
+            range.collapse(true);
+            range.moveStart('character', startIndex);//起始光标
+            range.moveEnd('character', stopIndex - startIndex);//结束光标
+            range.select();//不兼容苹果
+        }else{//firefox/chrome
+            textbox.setSelectionRange(startIndex, stopIndex);
+            textbox.focus();
+        }
     }
     //保留两位小数
     public toDecimal(num) {
@@ -137,5 +149,52 @@ export default class Config extends cc.Component {
         var data = num.replace(/\s/g,'').replace(/(\d{4})\d+(\d{4})$/, "**** **** **** $2") ;
         return data;
 
+    }
+
+    uploadImg(){
+        var app = cc.find('Canvas').getComponent('Canvas');
+        try
+        {
+            let input = document.createElement("input");
+            input.type = 'file';
+            input.id ='imgInput';
+            input.accept = 'image/*';
+            input.multiple=true;
+            input.style.position = 'absolute';
+            input.addEventListener('change',(e:any)=>{
+                console.log(e);
+            })
+            input.style.width = '120px';
+            input.style.height = '30px';
+            let dom = document.getElementById('Cocos2dGameContainer');
+            let w =  dom.style.width.replace('px','');
+            let h =  dom.style.height.replace('px','');
+            if(Number(w)/Number(h) < 1.7){
+                input.style.top = '67%';
+                input.style.left ='42%';
+                input.style.width = '200px';
+                input.style.height = '50px';
+                //iphonex
+            }else if(Number(w)/Number(h) < 2.1){
+                input.style.top = '69%';
+                input.style.left ='42%';
+                input.style.width = '120px';
+                input.style.height = '30px';
+            }else if(Number(w)/Number(h) > 2.1){
+                input.style.top = '67%';
+                input.style.left ='43%';
+                input.style.width = '150px';
+                input.style.height = '30px';
+            }else{
+                input.style.top = '69%';
+                input.style.left ='42%';
+                input.style.width = '120px';
+                input.style.height = '30px';
+            }
+            dom.appendChild(input);
+        } catch (err)
+        {
+            console.log(err)
+        }
     }
 }

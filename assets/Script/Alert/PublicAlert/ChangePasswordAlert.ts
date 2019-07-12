@@ -67,6 +67,7 @@ export default class NewClass extends cc.Component {
         this.FormData.append('old_password', this.oldPasswordLabel.string);
         this.FormData.append('password',this.newPasswordLabel.string);
         this.FormData.append('token',this.app.token);
+        this.FormData.append('version',this.app.version);
         fetch(url,{
             method:'POST',
             body:this.FormData
